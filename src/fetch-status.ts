@@ -10,9 +10,8 @@ export default async function ({
 }: {
   queryKey: (string | string[])[];
 }) {
-  console.error("fetch data");
   const address = (queryKey[1] as Array<string>)[0];
-  if (!address) throw new Error("address can not be error");
+  if (!address) throw new Error("address can not be null");
   const res = await fetch(
     `https://arseed.web3infura.io/apikey_info/${address}`
   );

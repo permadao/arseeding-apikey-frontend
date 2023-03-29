@@ -6,6 +6,7 @@ import "@fontsource/public-sans";
 import { CssVarsProvider } from "@mui/joy/styles";
 import CssBaseline from "@mui/joy/CssBaseline";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Provider } from "jotai";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -17,12 +18,14 @@ const queryClient = new QueryClient({
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <CssVarsProvider>
-      {/* must be used under CssVarsProvider */}
-      <CssBaseline />
-      <QueryClientProvider client={queryClient}>
-        <App />
-      </QueryClientProvider>
-    </CssVarsProvider>
+    <Provider>
+      <CssVarsProvider>
+        {/* must be used under CssVarsProvider */}
+        <CssBaseline />
+        <QueryClientProvider client={queryClient}>
+          <App />
+        </QueryClientProvider>
+      </CssVarsProvider>
+    </Provider>
   </React.StrictMode>
 );

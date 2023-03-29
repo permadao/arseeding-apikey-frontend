@@ -28,7 +28,7 @@ export const [statusAtom] = atomsWithQuery((get) => ({
   queryFn: fetchStatusFn,
   refetchInterval: 2000,
   retry: true,
-  retryDelay: 1000,
+  retryDelay: 2000,
 }));
 
 export const [arseedBundlerAddressAtom] = atomsWithQuery(() => ({
@@ -41,6 +41,8 @@ export const [arseedBundlerAddressAtom] = atomsWithQuery(() => ({
       }
     ).bundler;
   },
+  retry: true,
+  retryDelay: 2000,
 }));
 
 export const metamaskProviderAtom = atom(
@@ -76,6 +78,14 @@ export const everpayAtom = atom(async (get) => {
   });
   return everpay;
 });
+const sleep = (t: number) => new Promise((resolve) => setTimeout(resolve, t));
+
+export const tokensInfoAtom = atom(async (get) => {
+  const everpay = await get(everpayAtom);
+  const info = await everpay.info();
+  await sleep(1000);
+  return info;
+});
 
 // get balances of current everpay account
 export const [balancesAtom] = atomsWithQuery((get) => ({
@@ -91,8 +101,8 @@ export const [balancesAtom] = atomsWithQuery((get) => ({
     return orderBy(balances, orderKey, orderPat);
   },
   refetchInterval: 2000,
-  retry: 1000,
-  retryDelay: 1000,
+  retry: true,
+  retryDelay: 2000,
 }));
 
 export const getApikeyAtom = atom(async (get) => {
