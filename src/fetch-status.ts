@@ -12,7 +12,7 @@ export default async function ({
 }) {
   console.error("fetch data");
   const address = (queryKey[1] as Array<string>)[0];
-  //   const address = "0x4002ED1a1410aF1b4930cF6c479ae373dEbD6223";
+  if (!address) throw new Error("address can not be error");
   const res = await fetch(
     `https://arseed.web3infura.io/apikey_info/${address}`
   );

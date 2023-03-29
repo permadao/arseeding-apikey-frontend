@@ -97,15 +97,13 @@ export const [balancesAtom] = atomsWithQuery((get) => ({
 
 export const getApikeyAtom = atom(async (get) => {
   const signer = await get(signerAtom);
-  const accounts = get(accountsAtom);
-
   return async () => {
     // https://www.notion.so/permadao/123-3b62f09dcc2c4076886f40fdf7252e1d
     const curTime = ~~(new Date().getTime() / 1000);
     const signature = await signer.signMessage(curTime.toString());
 
     const rep = await fetch(
-      `https://arseed.web3infra.dev/apikey/${accounts[0]}/${signature}`
+      `https://arseed.web3infra.dev/apikey/${curTime}/${signature}`
     );
     const res = (await rep.json()) as unknown as
       | string
@@ -113,6 +111,7 @@ export const getApikeyAtom = atom(async (get) => {
           error: string;
         };
 
+    // report error here.
     if (isString(res)) {
       return res;
     }
