@@ -1,0 +1,45 @@
+{
+  "name": "arseeding-apikey",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.10.6",
+    "@emotion/styled": "^11.10.6",
+    "@fontsource/public-sans": "^4.5.12",
+    "@metamask/detect-provider": "^2.0.0",
+    "@mui/joy": "5.0.0-alpha.73",
+    "@tanstack/query-core": "^4.27.0",
+    "@tanstack/react-query": "^4.28.0",
+    "buffer": "^6.0.3",
+    "ethers": "^5.4",
+    "everpay": "^0.6.1",
+    "is-string": "^1.0.7",
+    "jotai": "^2.0.3",
+    "jotai-tanstack-query": "^0.6.0",
+    "lodash": "^4.17.21",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
+    "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
+    "@swc-jotai/react-refresh": "^0.0.7",
+    "@types/is-string": "^1.0.0",
+    "@types/lodash": "^4.14.192",
+    "@types/node": "^18.15.10",
+    "@types/react": "^18.0.28",
+    "@types/react-dom": "^18.0.11",
+    "@vitejs/plugin-react-swc": "^3.0.0",
+    "esbuild": "^0.17.14",
+    "rollup-plugin-node-polyfills": "^0.2.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.3",
+    "vite": "^4.2.0"
+  }
+}
