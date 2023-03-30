@@ -19,7 +19,7 @@ export default defineConfig(({ mode }) => {
     }, {}),
   };
   return {
-    plugins: [react(), nodePolyfills()],
+    plugins: [react()],
     define: Object.assign(processEnvValues, { global: {} }),
     resolve: {
       alias: {
@@ -46,7 +46,12 @@ export default defineConfig(({ mode }) => {
       minify: "terser",
       sourcemap: "inline",
       rollupOptions: {
-        plugins: [polyfills()],
+        plugins: [
+          polyfills(),
+          nodePolyfills({
+            protocolImports: true,
+          }),
+        ],
       },
     },
   };
