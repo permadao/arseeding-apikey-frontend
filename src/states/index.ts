@@ -105,7 +105,9 @@ export const [balancesAtom] = atomsWithQuery((get) => ({
       "symbol",
     ];
     const orderPat: Array<"desc" | "asc"> = ["desc", "asc"];
-    return orderBy(balances, orderKey, orderPat);
+    return orderBy(balances, orderKey, orderPat).filter(
+      (e) => e.balance !== "0"
+    );
   },
   refetchInterval: 2000,
   retry: true,
