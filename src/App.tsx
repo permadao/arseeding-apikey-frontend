@@ -122,8 +122,8 @@ function Topup() {
     setHash(res.everHash);
   };
   const handleChangeAmount = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const amount = event.target.value;
-    setTopupAmount(amount as unknown as number);
+    const amount = parseFloat(event.target.value);
+    setTopupAmount(amount);
   };
 
   return (
