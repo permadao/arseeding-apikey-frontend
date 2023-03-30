@@ -12,6 +12,7 @@ import {
   tokensInfoAtom,
   topupAmountAtom,
   topupTagAtom,
+  topupTokenSymbolAtom,
 } from "./states";
 import { useAtom, Provider } from "jotai";
 import Container from "@mui/material/Container";
@@ -110,6 +111,7 @@ function CurrentAccountBalances() {
     </div>
   );
 }
+import Skeleton from "@mui/material/Skeleton";
 
 function ArseedingBundler() {
   const [arseedBundlerAddress] = useAtom(arseedBundlerAddressAtom);
@@ -121,6 +123,7 @@ function Topup() {
   const [topupAmount, setTopupAmount] = useAtom(topupAmountAtom);
   const [topupFn] = useAtom(loadableTopupToApikeyAtom);
   const [hash, setHash] = useState<string | null>();
+  const [topupTokenSymbol] = useAtom(topupTokenSymbolAtom);
 
   const handleTopup = async () => {
     if (topupFn.state !== "hasData") {
@@ -151,7 +154,10 @@ function Topup() {
       <p>topup transaction hash: {hash}</p>
       overflow-wrap: anywhere;
       <Typography>selected token's tag: {topupTag}</Typography>
-      <Typography>topup amount: {topupAmount}</Typography>
+      <Typography>
+        topup amount: {topupAmount}
+        {topupTokenSymbol}
+      </Typography>
       <form
         onSubmit={(event) => {
           event.preventDefault();
@@ -163,21 +169,21 @@ function Topup() {
           placeholder="topup amount"
           required
           sx={{ mb: 1 }}
-          defaultValue={1}
           value={topupAmount?.toString() ?? ""}
           onChange={handleChangeAmount}
           slotProps={{
             input: {
               min: 0,
-              max: 5,
               step: 0.1,
             },
           }}
         />
-        <Suspense fallback="loading tokenlist">
+        <Suspense fallback={<Skeleton variant="rectangular" height={50} />}>
           <TokenList />
         </Suspense>
-        <Button type="submit">topup</Button>
+        <Button loading={topupFn.state === "loading"} type="submit">
+          topup
+        </Button>
       </form>
     </Box>
   );
@@ -185,9 +191,14 @@ function Topup() {
 
 function TokenList() {
   const [tokensInfo] = useAtom(tokensInfoAtom);
-  const [_, setTopupTag] = useAtom(topupTagAtom);
+  const [, setTopupTokenSymbol] = useAtom(topupTokenSymbolAtom);
+  const [, setTopupTag] = useAtom(topupTagAtom);
   const handleSelectToken = (_: any, value: string | null) => {
     setTopupTag(value);
+    const res = tokensInfo.tokenList.filter((i) => i.tag === value);
+    if (res.length === 1) {
+      setTopupTokenSymbol(res[0].symbol);
+    }
   };
   return (
     <Select

@@ -7,6 +7,7 @@ import { CssVarsProvider, extendTheme } from "@mui/joy/styles";
 import CssBaseline from "@mui/joy/CssBaseline";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Provider } from "jotai";
+import { mergedTheme } from "./theme";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -16,42 +17,10 @@ const queryClient = new QueryClient({
   },
 });
 
-const customTheme = extendTheme({
-  typography: {
-    display1: {
-      overflowWrap: "anywhere",
-    },
-    display2: {
-      overflowWrap: "anywhere",
-    },
-    h1: {
-      overflowWrap: "anywhere",
-    },
-    h2: {
-      overflowWrap: "anywhere",
-    },
-    h3: {
-      overflowWrap: "anywhere",
-    },
-    h4: {
-      overflowWrap: "anywhere",
-    },
-    body1: {
-      overflowWrap: "anywhere",
-    },
-    body2: {
-      overflowWrap: "anywhere",
-    },
-    body3: {
-      overflowWrap: "anywhere",
-    },
-  },
-});
-
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <Provider>
-      <CssVarsProvider theme={customTheme}>
+      <CssVarsProvider theme={mergedTheme}>
         {/* must be used under CssVarsProvider */}
         <CssBaseline />
         <QueryClientProvider client={queryClient}>

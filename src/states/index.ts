@@ -140,14 +140,16 @@ export const getApikeyAtom = atom(async (get) => {
 
 import { loadable } from "jotai/utils";
 
+export const topupTokenSymbolAtom = atom<string | null>(null);
 export const topupTagAtom = atom<string | null>(null);
-export const topupAmountAtom = atom<number | null>(null);
+export const topupAmountAtom = atom<number>(0);
 export const topupToApikeyAtom = atom(async (get) => {
   const tag = get(topupTagAtom);
   const amount = get(topupAmountAtom);
-
   const everpay = await get(everpayAtom);
   const arseedingBundlerAddress = await get(arseedBundlerAddressAtom);
+  // MOCK delay for test
+  await sleep(500);
 
   return async () => {
     if (!tag) {
