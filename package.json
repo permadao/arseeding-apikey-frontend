@@ -13,6 +13,7 @@
     "@emotion/styled": "^11.10.6",
     "@fontsource/public-sans": "^4.5.12",
     "@metamask/detect-provider": "^2.0.0",
+    "@mui/icons-material": "^5.11.11",
     "@mui/joy": "5.0.0-alpha.73",
     "@mui/material": "^5.11.15",
     "@mui/utils": "^5.11.13",
@@ -27,6 +28,7 @@
     "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-toastify": "^9.1.2",
     "true-myth": "^6.2.0"
   },
   "devDependencies": {

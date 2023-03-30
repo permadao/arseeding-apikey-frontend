@@ -24,6 +24,9 @@ import Card from "@mui/joy/Card";
 import Input from "@mui/joy/Input";
 import Skeleton from "@mui/material/Skeleton";
 import Typography from "@mui/joy/Typography";
+import Alert from "@mui/joy/Alert";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import { toast } from "react-toastify";
 
 function Status() {
   const [data] = useAtom(statusAtom);
@@ -109,30 +112,45 @@ function Topup() {
     if (topupFn.state !== "hasData") {
       return;
     }
-    const res = await topupFn.data();
+    const res = toast.promise(topupFn.data, {
+      pending: "pending transaction",
+      success: "transaction has been mint",
+      error: "transaction failed",
+    });
     if (res instanceof AmountInvalidError) {
-      console.error("amount invalid error");
+      toast("amount invalid error");
       return;
     }
     if (res instanceof TagCannotBeNullError) {
-      console.error("tag can not be null error");
+      toast("tag can not be null error");
       return;
     }
     if (res instanceof Error) {
-      console.error({ me: res.message });
+      toast(`unknow error: ${res.message}`);
       return;
     }
-    setHash(res.everHash);
   };
   const handleChangeAmount = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setTopupAmount(parseFloat(event.target.value));
+    const amount = event.target.value;
+    setTopupAmount(amount as unknown as number);
   };
 
   return (
     <Box>
       <h2>Topup to arseeding</h2>
-      <p>topup transaction hash: {hash}</p>
-      overflow-wrap: anywhere;
+      {hash && (
+        <Alert startDecorator={<CheckCircleIcon />} variant="soft">
+          <div>
+            <Typography fontWeight="lg" mt={0.25}>
+              Success
+            </Typography>
+            <Typography fontSize="sm" sx={{ opacity: 0.8 }}>
+              transaction {hash} has been commit to everpay mainnet!
+            </Typography>
+          </div>
+        </Alert>
+      )}
+
       <Typography>selected token's tag: {topupTag}</Typography>
       <Typography>
         topup amount: {topupAmount}
@@ -149,14 +167,9 @@ function Topup() {
           placeholder="topup amount"
           required
           sx={{ mb: 1 }}
-          value={topupAmount?.toString() ?? ""}
+          value={topupAmount}
           onChange={handleChangeAmount}
-          slotProps={{
-            input: {
-              min: 0,
-              step: 0.1,
-            },
-          }}
+          // slotProps={null}
         />
         <Suspense fallback={<Skeleton variant="rectangular" height={50} />}>
           <TokenList />
@@ -172,7 +185,7 @@ function Topup() {
 function TokenList() {
   const [tokensInfo] = useAtom(tokensInfoAtom);
   const [, setTopupTokenSymbol] = useAtom(topupTokenSymbolAtom);
-  const [, setTopupTag] = useAtom(topupTagAtom);
+  const [topupTag, setTopupTag] = useAtom(topupTagAtom);
   const handleSelectToken = (_: any, value: string | null) => {
     setTopupTag(value);
     const res = tokensInfo.tokenList.filter((i) => i.tag === value);
@@ -182,6 +195,7 @@ function TokenList() {
   };
   return (
     <Select
+      value={topupTag}
       placeholder="Choose one Token to topup"
       onChange={handleSelectToken}
     >
@@ -241,11 +255,7 @@ function App() {
         </Suspense>
       </Box>
       <Box>
-        {account && (
-          <>
-            <Status />
-          </>
-        )}
+        <Status />
       </Box>
       <Box>
         <Suspense fallback="loading topup component...">

@@ -13,6 +13,9 @@ dependencies:
   '@metamask/detect-provider':
     specifier: ^2.0.0
     version: 2.0.0
+  '@mui/icons-material':
+    specifier: ^5.11.11
+    version: 5.11.11(@mui/material@5.11.15)(@types/react@18.0.29)(react@18.2.0)
   '@mui/joy':
     specifier: 5.0.0-alpha.73
     version: 5.0.0-alpha.73(@emotion/react@11.10.6)(@emotion/styled@11.10.6)(@types/react@18.0.29)(react-dom@18.2.0)(react@18.2.0)
@@ -55,6 +58,9 @@ dependencies:
   react-dom:
     specifier: ^18.2.0
     version: 18.2.0(react@18.2.0)
+  react-toastify:
+    specifier: ^9.1.2
+    version: 9.1.2(react-dom@18.2.0)(react@18.2.0)
   true-myth:
     specifier: ^6.2.0
     version: 6.2.0
@@ -859,6 +865,23 @@ packages:
 
   /@mui/core-downloads-tracker@5.11.15:
     resolution: {integrity: sha512-Q0e2oBsjHyIWWj1wLzl14btunvBYC0yl+px7zL9R69tF87uenj6q72ieS369BJ6jxYpJwvXfR6/f+TC+ZUsKKg==}
+    dev: false
+
+  /@mui/icons-material@5.11.11(@mui/material@5.11.15)(@types/react@18.0.29)(react@18.2.0):
+    resolution: {integrity: sha512-Eell3ADmQVE8HOpt/LZ3zIma8JSvPh3XgnhwZLT0k5HRqZcd6F/QDHc7xsWtgz09t+UEFvOYJXjtrwKmLdwwpw==}
+    engines: {node: '>=12.0.0'}
+    peerDependencies:
+      '@mui/material': ^5.0.0
+      '@types/react': ^17.0.0 || ^18.0.0
+      react: ^17.0.0 || ^18.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+    dependencies:
+      '@babel/runtime': 7.21.0
+      '@mui/material': 5.11.15(@emotion/react@11.10.6)(@emotion/styled@11.10.6)(@types/react@18.0.29)(react-dom@18.2.0)(react@18.2.0)
+      '@types/react': 18.0.29
+      react: 18.2.0
     dev: false
 
   /@mui/joy@5.0.0-alpha.73(@emotion/react@11.10.6)(@emotion/styled@11.10.6)(@types/react@18.0.29)(react-dom@18.2.0)(react@18.2.0):
@@ -1792,6 +1815,17 @@ packages:
 
   /react-is@18.2.0:
     resolution: {integrity: sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==}
+    dev: false
+
+  /react-toastify@9.1.2(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-PBfzXO5jMGEtdYR5jxrORlNZZe/EuOkwvwKijMatsZZm8IZwLj01YvobeJYNjFcA6uy6CVrx2fzL9GWbhWPTDA==}
+    peerDependencies:
+      react: '>=16'
+      react-dom: '>=16'
+    dependencies:
+      clsx: 1.2.1
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
     dev: false
 
   /react-transition-group@4.4.5(react-dom@18.2.0)(react@18.2.0):

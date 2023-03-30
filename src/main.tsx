@@ -1,13 +1,14 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
-// import "./index.css";
+import "react-toastify/dist/ReactToastify.css";
 import "@fontsource/public-sans";
 import { CssVarsProvider, extendTheme } from "@mui/joy/styles";
 import CssBaseline from "@mui/joy/CssBaseline";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Provider } from "jotai";
 import { mergedTheme } from "./theme";
+import { ToastContainer } from "react-toastify";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -25,6 +26,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
         <CssBaseline />
         <QueryClientProvider client={queryClient}>
           <App />
+          <ToastContainer />
         </QueryClientProvider>
       </CssVarsProvider>
     </Provider>
