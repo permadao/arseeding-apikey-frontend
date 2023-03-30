@@ -154,10 +154,10 @@ export const topupToApikeyAtom = atom(async (get) => {
 
   return async () => {
     if (!tag) {
-      return new TagCannotBeNullError("tag can not be null");
+      return Promise.reject(new TagCannotBeNullError("tag can not be null"));
     }
     if (!amount || amount <= 0) {
-      return new AmountInvalidError("amount error");
+      return Promise.reject(new AmountInvalidError("amount error"));
     }
     return await everpay.transfer({
       tag,

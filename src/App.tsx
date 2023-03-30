@@ -112,22 +112,14 @@ function Topup() {
     const res = await toast.promise(topupFn.data, {
       pending: "pending transaction",
       success: "transaction has been mint",
-      error: "transaction failed",
+      error: {
+        render(err) {
+          const error = err.data as unknown as Error;
+          return error.message;
+        },
+      },
     });
-    if (res instanceof AmountInvalidError) {
-      toast("amount invalid error");
-      return;
-    }
-    if (res instanceof TagCannotBeNullError) {
-      toast("tag can not be null error");
-      return;
-    }
-    if (res instanceof Error) {
-      toast(`unknow error: ${res.message}`);
-      console.error(res);
-      // report error message here.
-      return;
-    }
+    setHash(res.everHash);
   };
   const handleChangeAmount = (event: React.ChangeEvent<HTMLInputElement>) => {
     const amount = event.target.value;
