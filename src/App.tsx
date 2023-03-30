@@ -9,16 +9,17 @@ import {
   metamaskProviderAtom,
   statusAtom,
   tokensInfoAtom,
+  topupAmountAtom,
+  topupTagAtom,
+  topupToApikeyAtom,
 } from "./states";
 import { useAtom, Provider } from "jotai";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import Button from "@mui/joy/Button";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
 import Select from "@mui/joy/Select";
 import Option from "@mui/joy/Option";
+import Card from "@mui/joy/Card";
 
 function GetAccountsComponent() {
   const [accounts, setAccounts] = useAtom(accountsAtom);
@@ -39,6 +40,8 @@ function GetAccountsComponent() {
   );
 }
 
+import Typography from "@mui/joy/Typography";
+
 function Status() {
   const [data] = useAtom(statusAtom);
   const [getApikeyFn] = useAtom(getApikeyAtom);
@@ -55,11 +58,26 @@ function Status() {
     }
   };
   return (
-    <div>
-      <h1>Apikey Status:</h1>
-      {apikey && <p>apikey: {apikey}</p>}
-      <p>estimateCap: {data.estimateCap}</p>
-      <h2>tokenBalance in this apikey:</h2>
+    <Card
+      sx={(theme) => ({
+        transition: "transform 0.3s, border 0.3s, box-shadow 0.2s",
+        "&:hover": {
+          boxShadow: "md",
+          transform: "translateY(-2px)",
+          borderColor: "neutral.outlinedHoverBorder",
+        },
+      })}
+    >
+      <Typography level="h3" sx={{ mb: 0.5 }}>
+        Apikey Status:
+      </Typography>
+      <Typography level="body2">
+        apikey: {apikey ?? "***************"}
+      </Typography>
+      <Typography level="body2">estimate cap: {data.estimateCap}</Typography>
+      <Typography level="h2" fontSize="sm" sx={{ mb: 0.5 }}>
+        token balances in this apikey:
+      </Typography>
       <ul>
         {Object.keys(data.tokenBalance).map((o) => (
           <li key={o}>
@@ -68,7 +86,7 @@ function Status() {
         ))}
       </ul>
       <Button onClick={handleGetApikey}>get apikey</Button>
-    </div>
+    </Card>
   );
 }
 
@@ -97,19 +115,21 @@ function ArseedingBundler() {
   return <div>arseeding bundler address: {arseedBundlerAddress}</div>;
 }
 function Topup() {
+  const [topupTag, setTopupTag] = useAtom(topupTagAtom);
+  const [topupAmount, setTopupAmount] = useAtom(topupAmountAtom);
+  const [topupFn] = useAtom(topupToApikeyAtom);
   const [arseedingBundlerAddress] = useAtom(arseedingBundlerAddressAtom);
   const [hash, setHash] = useState<string | null>();
   const [everpay] = useAtom(everpayAtom);
   const [tokenIndex, setTokenIndex] = useState<string | null>();
 
   const handleTopup = async () => {
-    const res = await everpay.transfer({
-      tag: "ethereum-usdc-0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
-      amount: "0.001",
-      to: arseedingBundlerAddress,
-      data: { appName: "arseeding", action: "apikeyPayment" },
-    });
-    setHash(res.everHash);
+    try {
+      const res = await topupFn();
+      setHash(res.everHash);
+    } catch (e) {
+      console.error({ e });
+    }
   };
 
   return (

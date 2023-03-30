@@ -5,7 +5,9 @@ import detectEthereumProvider from "@metamask/detect-provider";
 import { ethers, providers } from "ethers";
 import { orderBy } from "lodash";
 import isString from "is-string";
-
+import * as E from "fp-ts/Either";
+import { flow, pipe, absurd } from "fp-ts/function";
+import * as TE from "fp-ts/lib/TaskEither";
 import {
   ACCOUNT_STATUS_QUERY_KEY,
   ARSEEDING_BUNDLER_ADDRESS,
@@ -56,35 +58,38 @@ export const metamaskProviderAtom = atom(
     return p;
   }
 );
+
 export const providerAtom = atom(async (get) => {
-  const provider = new ethers.providers.Web3Provider(
-    await get(metamaskProviderAtom)
-  );
-  return provider;
+  const metamaskProvider = await get(metamaskProviderAtom);
+  return new ethers.providers.Web3Provider(metamaskProvider);
 });
 export const signerAtom = atom(async (get) => {
   const provider = await get(providerAtom);
   return provider.getSigner();
 });
+
 export const everpayAtom = atom(async (get) => {
+  // TODO: supporting select account.
+  // TODO: check lenght
   const accounts = get(accountsAtom);
   const signer = await get(signerAtom);
   const everpay = new Everpay({
-    // TODO: supporting select account.
-    // TODO: check lenght
     account: accounts[0],
     chainType: ChainType.ethereum,
     ethConnectedSigner: signer,
   });
+
   return everpay;
 });
 const sleep = (t: number) => new Promise((resolve) => setTimeout(resolve, t));
 
 export const tokensInfoAtom = atom(async (get) => {
-  const everpay = await get(everpayAtom);
-  const info = await everpay.info();
+  // MOCK: delay
   await sleep(1000);
-  return info;
+  const everpay = await get(everpayAtom);
+  const res = await everpay.info();
+
+  return res;
 });
 
 // get balances of current everpay account
@@ -126,5 +131,30 @@ export const getApikeyAtom = atom(async (get) => {
       return res;
     }
     throw new Error(res.error);
+  };
+});
+
+export const topupTagAtom = atom<string | null>(null);
+export const topupAmountAtom = atom<number | null>(null);
+export const topupToApikeyAtom = atom(async (get) => {
+  const tag = get(topupTagAtom);
+  const amount = get(topupAmountAtom);
+
+  const everpay = await get(everpayAtom);
+  const arseedingBundlerAddress = await get(arseedBundlerAddressAtom);
+
+  return async () => {
+    if (!tag) {
+      return Promise.reject(new Error("tag can not be null"));
+    }
+    if (!amount || amount <= 0) {
+      return Promise.reject(new Error("amount error"));
+    }
+    return await everpay.transfer({
+      tag,
+      amount: amount.toString(),
+      to: arseedingBundlerAddress,
+      data: { appName: "arseeding", action: "apikeyPayment" },
+    });
   };
 });

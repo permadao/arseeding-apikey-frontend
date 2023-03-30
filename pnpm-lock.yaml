@@ -34,6 +34,9 @@ dependencies:
   everpay:
     specifier: ^0.6.1
     version: 0.6.1
+  fp-ts:
+    specifier: ^2.13.1
+    version: 2.13.1
   is-string:
     specifier: ^1.0.7
     version: 1.0.7
@@ -1528,6 +1531,10 @@ packages:
     peerDependenciesMeta:
       debug:
         optional: true
+    dev: false
+
+  /fp-ts@2.13.1:
+    resolution: {integrity: sha512-0eu5ULPS2c/jsa1lGFneEFFEdTbembJv8e4QKXeVJ3lm/5hyve06dlKZrpxmMwJt6rYen7sxmHHK2CLaXvWuWQ==}
     dev: false
 
   /fsevents@2.3.2:
