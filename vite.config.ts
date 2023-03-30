@@ -1,14 +1,11 @@
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 
-// yarn add buffer
-// yarn add --dev @esbuild-plugins/node-globals-polyfill
-// yarn add --dev @esbuild-plugins/node-modules-polyfill
 import { defineConfig, loadEnv } from "vite";
 import { NodeGlobalsPolyfillPlugin } from "@esbuild-plugins/node-globals-polyfill";
 import { NodeModulesPolyfillPlugin } from "@esbuild-plugins/node-modules-polyfill";
-// You don't need to add this to deps, it's included by @esbuild-plugins/node-modules-polyfill
-import rollupNodePolyFill from "rollup-plugin-node-polyfills";
+import polyfills from "rollup-plugin-node-polyfills";
+import { nodePolyfills } from "vite-plugin-node-polyfills";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
@@ -22,7 +19,7 @@ export default defineConfig(({ mode }) => {
     }, {}),
   };
   return {
-    plugins: [react()],
+    plugins: [react(), nodePolyfills()],
     define: Object.assign(processEnvValues, { global: {} }),
     resolve: {
       alias: {
@@ -44,14 +41,12 @@ export default defineConfig(({ mode }) => {
       },
     },
     build: {
-      target: "esnext",
-      minify: true,
+      // target: "esnext",
+      // minify: false,
+      minify: "terser",
+      sourcemap: "inline",
       rollupOptions: {
-        plugins: [
-          // Enable rollup polyfills plugin
-          // used during production bundling
-          rollupNodePolyFill(),
-        ],
+        plugins: [polyfills()],
       },
     },
   };

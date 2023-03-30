@@ -150,7 +150,7 @@ export const topupToApikeyAtom = atom(async (get) => {
   const everpay = await get(everpayAtom);
   const arseedingBundlerAddress = await get(arseedBundlerAddressAtom);
   // MOCK delay for test
-  await sleep(500);
+  await sleep(1000);
 
   return async () => {
     if (!tag) {

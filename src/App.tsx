@@ -79,9 +79,6 @@ function Status() {
 function CurrentAccountBalances() {
   const [account] = useAtom(accountAtom);
   const [balances] = useAtom(balancesAtom);
-  if (!account) {
-    return <></>;
-  }
   return (
     <div>
       <p>balances of current account({account}) in everpay:</p>
