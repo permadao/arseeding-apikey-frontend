@@ -11,7 +11,6 @@ import {
   BALANCES_KEY,
 } from "../constants";
 import fetchStatusFn from "../fetch-status";
-import Result, { err, map, ok, toString } from "true-myth/src/public/result";
 
 export const BaseError = class extends Error {
   constructor(message: string) {
@@ -22,15 +21,12 @@ export const BaseError = class extends Error {
 type ArrayElement<ArrayType extends readonly unknown[]> =
   ArrayType extends readonly (infer ElementType)[] ? ElementType : never;
 
-export const accountsAtom = atom<string[]>([]);
-export const arseedingBundlerAddressAtom = atom<string>(
-  "uDA8ZblC-lyEFfsYXKewpwaX-kkNDDw8az3IW9bDL68"
-);
+export const accountAtom = atom<string | null>(null);
 
 // get bundler address here:
 // https://arseed.web3infra.dev/bundle/bundler
 export const [statusAtom] = atomsWithQuery((get) => ({
-  queryKey: [ACCOUNT_STATUS_QUERY_KEY, get(accountsAtom)],
+  queryKey: [ACCOUNT_STATUS_QUERY_KEY, get(accountAtom)],
   queryFn: fetchStatusFn,
   refetchInterval: 2000,
   retry: true,
@@ -52,6 +48,8 @@ export const [arseedBundlerAddressAtom] = atomsWithQuery(() => ({
 }));
 export const CannotFindMetamaskWalletError = class extends BaseError {};
 export const metamaskProviderAtom = atom(async () => {
+  // MOCK delay
+  await sleep(1000);
   const p: providers.ExternalProvider | null = await detectEthereumProvider({
     mustBeMetaMask: true,
   });
@@ -73,10 +71,13 @@ export const signerAtom = atom(async (get) => {
 export const everpayAtom = atom(async (get) => {
   // TODO: supporting select account.
   // TODO: check lenght
-  const accounts = get(accountsAtom);
+  const account = get(accountAtom);
+  if (!account) {
+    throw new Error("account not found");
+  }
   const signer = await get(signerAtom);
   const everpay = new Everpay({
-    account: accounts[0],
+    account: account,
     chainType: ChainType.ethereum,
     ethConnectedSigner: signer,
   });
@@ -166,6 +167,15 @@ export const topupToApikeyAtom = atom(async (get) => {
     });
   };
 });
+export const connectWalletFnAtom = atom(async (get) => {
+  const metamaskProvider = await get(metamaskProviderAtom);
+  return async () => {
+    return (await metamaskProvider.request!({
+      method: "eth_requestAccounts",
+    })) as string[];
+  };
+});
+export const loadableConnectWalletFnAtom = loadable(connectWalletFnAtom);
 export const loadableTopupToApikeyAtom = loadable(topupToApikeyAtom);
 
 export const AmountInvalidError = class extends BaseError {};

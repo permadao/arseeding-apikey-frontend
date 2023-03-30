@@ -1,12 +1,12 @@
 import { Suspense, useState } from "react";
 import {
-  accountsAtom,
+  accountAtom,
   AmountInvalidError,
   arseedBundlerAddressAtom,
   balancesAtom,
   getApikeyAtom,
+  loadableConnectWalletFnAtom,
   loadableTopupToApikeyAtom,
-  metamaskProviderAtom,
   statusAtom,
   TagCannotBeNullError,
   tokensInfoAtom,
@@ -14,7 +14,7 @@ import {
   topupTagAtom,
   topupTokenSymbolAtom,
 } from "./states";
-import { useAtom, Provider } from "jotai";
+import { useAtom } from "jotai";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import Button from "@mui/joy/Button";
@@ -22,26 +22,7 @@ import Select from "@mui/joy/Select";
 import Option from "@mui/joy/Option";
 import Card from "@mui/joy/Card";
 import Input from "@mui/joy/Input";
-
-function GetAccountsComponent() {
-  const [accounts, setAccounts] = useAtom(accountsAtom);
-  const [metamaskProvider] = useAtom(metamaskProviderAtom);
-
-  const handleGetAccounts = async () => {
-    const accounts = await metamaskProvider.request!({
-      method: "eth_requestAccounts",
-    });
-    setAccounts(accounts);
-  };
-  return (
-    <div>
-      {accounts.length === 0 && (
-        <Button onClick={handleGetAccounts}>connect wallet</Button>
-      )}
-    </div>
-  );
-}
-
+import Skeleton from "@mui/material/Skeleton";
 import Typography from "@mui/joy/Typography";
 
 function Status() {
@@ -61,7 +42,7 @@ function Status() {
   };
   return (
     <Card
-      sx={(theme) => ({
+      sx={() => ({
         transition: "transform 0.3s, border 0.3s, box-shadow 0.2s",
         "&:hover": {
           boxShadow: "md",
@@ -93,14 +74,14 @@ function Status() {
 }
 
 function CurrentAccountBalances() {
-  const [accounts] = useAtom(accountsAtom);
+  const [account] = useAtom(accountAtom);
   const [balances] = useAtom(balancesAtom);
-  if (accounts.length === 0) {
+  if (!account) {
     return <></>;
   }
   return (
     <div>
-      <p>balances of current account({accounts[0]}) in everpay:</p>
+      <p>balances of current account({account}) in everpay:</p>
       <ul>
         {balances.map((b) => (
           <li key={b.tag}>
@@ -111,7 +92,6 @@ function CurrentAccountBalances() {
     </div>
   );
 }
-import Skeleton from "@mui/material/Skeleton";
 
 function ArseedingBundler() {
   const [arseedBundlerAddress] = useAtom(arseedBundlerAddressAtom);
@@ -216,8 +196,38 @@ function TokenList() {
   );
 }
 
+function GetAccountsComponent() {
+  const [, setAccount] = useAtom(accountAtom);
+  const [connectWalletFn] = useAtom(loadableConnectWalletFnAtom);
+
+  const handleGetAccounts = async () => {
+    if (connectWalletFn.state === "hasData") {
+      const accounts = await connectWalletFn.data();
+      setAccount(accounts[0]);
+    }
+  };
+  return (
+    <Button
+      loading={connectWalletFn.state === "loading"}
+      onClick={handleGetAccounts}
+    >
+      connect wallet
+    </Button>
+  );
+}
+
 function App() {
-  const [accounts] = useAtom(accountsAtom);
+  const [account] = useAtom(accountAtom);
+
+  if (!account) {
+    return (
+      <Container maxWidth="sm">
+        <Box>
+          <GetAccountsComponent />
+        </Box>
+      </Container>
+    );
+  }
   return (
     <Container maxWidth="sm">
       <Box>
@@ -231,14 +241,8 @@ function App() {
         </Suspense>
       </Box>
       <Box>
-        <Suspense fallback={"loading current address container..."}>
-          <GetAccountsComponent />
-        </Suspense>
-      </Box>
-      <Box>
-        {accounts.length !== 0 && (
+        {account && (
           <>
-            accounts: {accounts.toString()}
             <Status />
           </>
         )}
