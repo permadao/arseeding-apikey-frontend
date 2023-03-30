@@ -5,15 +5,19 @@ import detectEthereumProvider from "@metamask/detect-provider";
 import { ethers, providers } from "ethers";
 import { orderBy } from "lodash";
 import isString from "is-string";
-import * as E from "fp-ts/Either";
-import { flow, pipe, absurd } from "fp-ts/function";
-import * as TE from "fp-ts/lib/TaskEither";
 import {
   ACCOUNT_STATUS_QUERY_KEY,
   ARSEEDING_BUNDLER_ADDRESS,
   BALANCES_KEY,
 } from "../constants";
 import fetchStatusFn from "../fetch-status";
+import Result, { err, map, ok, toString } from "true-myth/src/public/result";
+
+export const BaseError = class extends Error {
+  constructor(message: string) {
+    super(message);
+  }
+};
 
 type ArrayElement<ArrayType extends readonly unknown[]> =
   ArrayType extends readonly (infer ElementType)[] ? ElementType : never;
@@ -46,18 +50,16 @@ export const [arseedBundlerAddressAtom] = atomsWithQuery(() => ({
   retry: true,
   retryDelay: 2000,
 }));
-
-export const metamaskProviderAtom = atom(
-  async (): Promise<providers.ExternalProvider> => {
-    const p = await detectEthereumProvider({
-      mustBeMetaMask: true,
-    });
-    if (!p) {
-      throw new Error("can not find metamask");
-    }
-    return p;
+export const CannotFindMetamaskWalletError = class extends BaseError {};
+export const metamaskProviderAtom = atom(async () => {
+  const p: providers.ExternalProvider | null = await detectEthereumProvider({
+    mustBeMetaMask: true,
+  });
+  if (!p) {
+    throw new CannotFindMetamaskWalletError("can not find metamask wallet");
   }
-);
+  return p;
+});
 
 export const providerAtom = atom(async (get) => {
   const metamaskProvider = await get(metamaskProviderAtom);
@@ -134,6 +136,8 @@ export const getApikeyAtom = atom(async (get) => {
   };
 });
 
+import { loadable } from "jotai/utils";
+
 export const topupTagAtom = atom<string | null>(null);
 export const topupAmountAtom = atom<number | null>(null);
 export const topupToApikeyAtom = atom(async (get) => {
@@ -145,10 +149,10 @@ export const topupToApikeyAtom = atom(async (get) => {
 
   return async () => {
     if (!tag) {
-      return Promise.reject(new Error("tag can not be null"));
+      return new TagCannotBeNullError("tag can not be null");
     }
     if (!amount || amount <= 0) {
-      return Promise.reject(new Error("amount error"));
+      return new AmountInvalidError("amount error");
     }
     return await everpay.transfer({
       tag,
@@ -158,3 +162,7 @@ export const topupToApikeyAtom = atom(async (get) => {
     });
   };
 });
+export const loadableTopupToApikeyAtom = loadable(topupToApikeyAtom);
+
+export const AmountInvalidError = class extends BaseError {};
+export const TagCannotBeNullError = class extends BaseError {};

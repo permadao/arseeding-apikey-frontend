@@ -34,9 +34,6 @@ dependencies:
   everpay:
     specifier: ^0.6.1
     version: 0.6.1
-  fp-ts:
-    specifier: ^2.13.1
-    version: 2.13.1
   is-string:
     specifier: ^1.0.7
     version: 1.0.7
@@ -55,6 +52,9 @@ dependencies:
   react-dom:
     specifier: ^18.2.0
     version: 18.2.0(react@18.2.0)
+  true-myth:
+    specifier: ^6.2.0
+    version: 6.2.0
 
 devDependencies:
   '@esbuild-plugins/node-globals-polyfill':
@@ -1533,10 +1533,6 @@ packages:
         optional: true
     dev: false
 
-  /fp-ts@2.13.1:
-    resolution: {integrity: sha512-0eu5ULPS2c/jsa1lGFneEFFEdTbembJv8e4QKXeVJ3lm/5hyve06dlKZrpxmMwJt6rYen7sxmHHK2CLaXvWuWQ==}
-    dev: false
-
   /fsevents@2.3.2:
     resolution: {integrity: sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==}
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
@@ -1938,6 +1934,11 @@ packages:
   /to-fast-properties@2.0.0:
     resolution: {integrity: sha512-/OaKK0xYrs3DmxRYqL/yDc+FxFUVYhDlXMhRmv3z915w2HF1tnN1omB354j8VUGO/hbRzyD6Y3sA7v7GS/ceog==}
     engines: {node: '>=4'}
+    dev: false
+
+  /true-myth@6.2.0:
+    resolution: {integrity: sha512-NYvzj/h2mGXmdIBmz825c/lQhpI4bzUQEEiBCAbNOVpr6aeYa1WTpJ+OmGmj1yPqbTLPKCCSi54yDnaEup504Q==}
+    engines: {node: 14.* || 16.* || >= 18.*}
     dev: false
 
   /ts-node@10.9.1(@types/node@18.15.10)(typescript@4.9.5):

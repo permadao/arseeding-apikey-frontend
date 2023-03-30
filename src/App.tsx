@@ -1,17 +1,17 @@
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useState } from "react";
 import {
   accountsAtom,
+  AmountInvalidError,
   arseedBundlerAddressAtom,
-  arseedingBundlerAddressAtom,
   balancesAtom,
-  everpayAtom,
   getApikeyAtom,
+  loadableTopupToApikeyAtom,
   metamaskProviderAtom,
   statusAtom,
+  TagCannotBeNullError,
   tokensInfoAtom,
   topupAmountAtom,
   topupTagAtom,
-  topupToApikeyAtom,
 } from "./states";
 import { useAtom, Provider } from "jotai";
 import Container from "@mui/material/Container";
@@ -20,6 +20,7 @@ import Button from "@mui/joy/Button";
 import Select from "@mui/joy/Select";
 import Option from "@mui/joy/Option";
 import Card from "@mui/joy/Card";
+import Input from "@mui/joy/Input";
 
 function GetAccountsComponent() {
   const [accounts, setAccounts] = useAtom(accountsAtom);
@@ -114,42 +115,85 @@ function ArseedingBundler() {
   const [arseedBundlerAddress] = useAtom(arseedBundlerAddressAtom);
   return <div>arseeding bundler address: {arseedBundlerAddress}</div>;
 }
+
 function Topup() {
-  const [topupTag, setTopupTag] = useAtom(topupTagAtom);
+  const [topupTag] = useAtom(topupTagAtom);
   const [topupAmount, setTopupAmount] = useAtom(topupAmountAtom);
-  const [topupFn] = useAtom(topupToApikeyAtom);
-  const [arseedingBundlerAddress] = useAtom(arseedingBundlerAddressAtom);
+  const [topupFn] = useAtom(loadableTopupToApikeyAtom);
   const [hash, setHash] = useState<string | null>();
-  const [everpay] = useAtom(everpayAtom);
-  const [tokenIndex, setTokenIndex] = useState<string | null>();
 
   const handleTopup = async () => {
-    try {
-      const res = await topupFn();
-      setHash(res.everHash);
-    } catch (e) {
-      console.error({ e });
+    if (topupFn.state !== "hasData") {
+      return;
     }
+    const res = await topupFn.data();
+    if (res instanceof AmountInvalidError) {
+      console.error("amount invalid error");
+      return;
+    }
+    if (res instanceof TagCannotBeNullError) {
+      console.error("tag can not be null error");
+      return;
+    }
+    if (res instanceof Error) {
+      console.error({ me: res.message });
+      return;
+    }
+    setHash(res.everHash);
+  };
+  const handleChangeAmount = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setTopupAmount(parseFloat(event.target.value));
   };
 
   return (
-    <div>
+    <Box>
       <h2>Topup to arseeding</h2>
       <p>topup transaction hash: {hash}</p>
-      <Box>
+      overflow-wrap: anywhere;
+      <Typography>selected token's tag: {topupTag}</Typography>
+      <Typography>topup amount: {topupAmount}</Typography>
+      <form
+        onSubmit={(event) => {
+          event.preventDefault();
+          handleTopup();
+        }}
+      >
+        <Input
+          type="number"
+          placeholder="topup amount"
+          required
+          sx={{ mb: 1 }}
+          defaultValue={1}
+          value={topupAmount?.toString() ?? ""}
+          onChange={handleChangeAmount}
+          slotProps={{
+            input: {
+              min: 0,
+              max: 5,
+              step: 0.1,
+            },
+          }}
+        />
         <Suspense fallback="loading tokenlist">
           <TokenList />
         </Suspense>
-      </Box>
-      <Button onClick={handleTopup}>topup</Button>
-    </div>
+        <Button type="submit">topup</Button>
+      </form>
+    </Box>
   );
 }
 
 function TokenList() {
   const [tokensInfo] = useAtom(tokensInfoAtom);
+  const [_, setTopupTag] = useAtom(topupTagAtom);
+  const handleSelectToken = (_: any, value: string | null) => {
+    setTopupTag(value);
+  };
   return (
-    <Select>
+    <Select
+      placeholder="Choose one Token to topup"
+      onChange={handleSelectToken}
+    >
       {tokensInfo.tokenList.map((t) => {
         return (
           <Option key={t.tag} value={t.tag}>
