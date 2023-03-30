@@ -112,7 +112,7 @@ function Topup() {
     if (topupFn.state !== "hasData") {
       return;
     }
-    const res = toast.promise(topupFn.data, {
+    const res = await toast.promise(topupFn.data, {
       pending: "pending transaction",
       success: "transaction has been mint",
       error: "transaction failed",
@@ -127,6 +127,8 @@ function Topup() {
     }
     if (res instanceof Error) {
       toast(`unknow error: ${res.message}`);
+      console.error(res);
+      // report error message here.
       return;
     }
   };
