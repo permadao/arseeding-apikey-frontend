@@ -1,16 +1,11 @@
 import { Suspense } from "react";
-import {
-  accountAtom,
-  arseedBundlerAddressAtom,
-  balancesAtom,
-  loadableConnectWalletFnAtom,
-} from "./states";
+import { accountAtom, arseedBundlerAddressAtom, balancesAtom } from "./states";
 import { useAtom } from "jotai";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
-import Button from "@mui/joy/Button";
 import Typography from "@mui/joy/Typography";
 import { Status, Topup } from "./components";
+import { ConnectWallet } from "./components/connectWallet";
 
 function CurrentAccountBalances() {
   const [account] = useAtom(accountAtom);
@@ -38,35 +33,13 @@ function ArseedingBundler() {
   );
 }
 
-function GetAccountsComponent() {
-  const [, setAccount] = useAtom(accountAtom);
-  const [connectWalletFn] = useAtom(loadableConnectWalletFnAtom);
-
-  const handleGetAccounts = async () => {
-    if (connectWalletFn.state === "hasData") {
-      const accounts = await connectWalletFn.data();
-      setAccount(accounts[0]);
-    }
-  };
-  return (
-    <Button
-      loading={connectWalletFn.state === "loading"}
-      onClick={handleGetAccounts}
-    >
-      connect wallet
-    </Button>
-  );
-}
-
 function App() {
   const [account] = useAtom(accountAtom);
 
   if (!account) {
     return (
       <Container maxWidth="sm">
-        <Box>
-          <GetAccountsComponent />
-        </Box>
+        <ConnectWallet />
       </Container>
     );
   }
