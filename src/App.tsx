@@ -8,6 +8,7 @@ import {
   AccountState,
   ApikeyStatus,
   ArseedingBundler,
+  StoringFees,
   Topup,
 } from "./components";
 import CircularProgress from "@mui/joy/CircularProgress";
@@ -35,6 +36,9 @@ function App() {
       </Suspense>
       <Suspense fallback={<CircularProgress variant="solid" />}>
         <ApikeyStatus />
+      </Suspense>
+      <Suspense fallback={<CircularProgress variant="solid" />}>
+        <StoringFees />
       </Suspense>
       <Suspense fallback={<CircularProgress variant="solid" />}>
         <Topup />

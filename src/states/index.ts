@@ -1,4 +1,4 @@
-import { atom, useAtom } from "jotai";
+import { atom } from "jotai";
 import { atomsWithQuery } from "jotai-tanstack-query";
 import Everpay, { ChainType } from "everpay";
 import detectEthereumProvider from "@metamask/detect-provider";
@@ -9,6 +9,7 @@ import {
   ACCOUNT_STATUS_QUERY_KEY,
   ARSEEDING_BUNDLER_ADDRESS,
   BALANCES_KEY,
+  STORING_FEE_KEY,
 } from "../constants";
 import fetchStatusFn from "../api/fetch-status";
 import { loadable } from "jotai/utils";
@@ -18,9 +19,15 @@ import {
   CannotFindMetamaskWalletError,
 } from "../errors";
 import { sleep } from "../tools";
-import { topupTagAtom, topupAmountAtom, accountAtom } from "./primitiveAtoms";
+import {
+  topupTagAtom,
+  topupAmountAtom,
+  accountAtom,
+  topupTokenSymbolAtom,
+  topupStoringSizeAtom,
+} from "./primitiveAtoms";
 import { OrderKey } from "../types";
-import { fetchBundlerAddress, getApikey } from "../api";
+import { fetchBundlerAddress, getApikey, getStoringFee } from "../api";
 export * from "./primitiveAtoms";
 
 // get bundler address here:
@@ -39,6 +46,20 @@ export const [arseedBundlerAddressAtom] = atomsWithQuery(() => ({
   retry: true,
   retryDelay: 2000,
 }));
+
+export const [fetchStoringFeeAtom] = atomsWithQuery((get) => {
+  const currencySymbol = get(topupTokenSymbolAtom);
+  const storingSize = get(topupStoringSizeAtom);
+
+  return {
+    queryKey: [STORING_FEE_KEY, currencySymbol, storingSize],
+    queryFn: getStoringFee,
+    refetchInterval: 2000,
+    retry: true,
+    retryDelay: 2000,
+  };
+});
+export const loadableFetchStoringFeeAtom = loadable(fetchStoringFeeAtom);
 
 export const metamaskProviderAtom = atom(
   async () => {
@@ -157,5 +178,6 @@ export const connectWalletFnAtom = atom(async (get) => {
   return async () =>
     (await provider.send("eth_requestAccounts", [])) as string[];
 });
+
 export const loadableConnectWalletFnAtom = loadable(connectWalletFnAtom);
 export const loadableTopupToApikeyAtom = loadable(topupToApikeyAtom);
