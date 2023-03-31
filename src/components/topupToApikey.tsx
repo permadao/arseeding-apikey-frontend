@@ -84,11 +84,35 @@ export function Topup() {
         <Suspense fallback={<Skeleton variant="rectangular" height={50} />}>
           <TokenList />
         </Suspense>
-        <Button loading={topupFn.state === "loading"} type="submit">
-          topup
-        </Button>
+        <TopupButton />
       </form>
     </Box>
+  );
+}
+
+function TopupButton() {
+  const [topupTag] = useAtom(topupTagAtom);
+  const [topupAmount, setTopupAmount] = useAtom(topupAmountAtom);
+  const [topupFn] = useAtom(loadableTopupToApikeyAtom);
+  const isDanger = !topupTag || topupAmount === 0 || !topupAmount;
+  const btnText = () => {
+    if (topupAmount === 0) {
+      return "Invalid topup amount.";
+    }
+    if (!topupTag) {
+      return "Invalid topup token.";
+    }
+    return "TOPUP";
+  };
+  return (
+    <Button
+      color={isDanger ? "danger" : "primary"}
+      disabled={isDanger}
+      loading={topupFn.state === "loading"}
+      type="submit"
+    >
+      {btnText()}
+    </Button>
   );
 }
 
