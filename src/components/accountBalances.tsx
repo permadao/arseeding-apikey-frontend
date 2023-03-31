@@ -8,9 +8,8 @@ export function AccountBalances() {
   const [balances] = useAtom(balancesAtom);
   return (
     <Box>
-      <Typography level="body2">
-        balances of current account({account}) in everpay:
-      </Typography>
+      <Typography level="body2">account address: {account}</Typography>
+      <Typography>balances in everpay:</Typography>
       <ul>
         {balances.map((b) => (
           <li key={b.tag}>

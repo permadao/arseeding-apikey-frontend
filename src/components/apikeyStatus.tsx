@@ -15,7 +15,7 @@ const cardStyle = () => ({
   },
 });
 
-export function Status() {
+export function ApikeyStatus() {
   const [data] = useAtom(statusAtom);
   const [getApikeyFn] = useAtom(getApikeyAtom);
   const [apikey, setApikey] = useState<string | null>(null);
