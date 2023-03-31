@@ -7,30 +7,14 @@ import Typography from "@mui/joy/Typography";
 import { Status, Topup } from "./components";
 import { ConnectWallet } from "./components/connectWallet";
 import CircularProgress from "@mui/joy/CircularProgress";
-
-function CurrentAccountBalances() {
-  const [account] = useAtom(accountAtom);
-  const [balances] = useAtom(balancesAtom);
-  return (
-    <div>
-      <Typography>
-        balances of current account({account}) in everpay:
-      </Typography>
-      <ul>
-        {balances.map((b) => (
-          <li key={b.tag}>
-            {b.symbol}: {b.balance}
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
+import { AccountBalances } from "./components/accountBalances";
 
 function ArseedingBundler() {
   const [arseedBundlerAddress] = useAtom(arseedBundlerAddressAtom);
   return (
-    <Typography>arseeding bundler address: {arseedBundlerAddress}</Typography>
+    <Box>
+      <Typography>arseeding bundler address: {arseedBundlerAddress}</Typography>
+    </Box>
   );
 }
 
@@ -47,24 +31,16 @@ function App() {
   return (
     <Suspense fallback={<CircularProgress variant="solid" />}>
       <Container maxWidth="sm">
-        <Box>
-          <Suspense fallback={<CircularProgress variant="solid" />}>
-            <ArseedingBundler />
-          </Suspense>
-        </Box>
-        <Box>
-          <Suspense fallback={<CircularProgress variant="solid" />}>
-            <CurrentAccountBalances />
-          </Suspense>
-        </Box>
-        <Box>
-          <Status />
-        </Box>
-        <Box>
-          <Suspense fallback={<CircularProgress variant="solid" />}>
-            <Topup />
-          </Suspense>
-        </Box>
+        <Suspense fallback={<CircularProgress variant="solid" />}>
+          <ArseedingBundler />
+        </Suspense>
+        <Suspense fallback={<CircularProgress variant="solid" />}>
+          <AccountBalances />
+        </Suspense>
+        <Status />
+        <Suspense fallback={<CircularProgress variant="solid" />}>
+          <Topup />
+        </Suspense>
       </Container>
     </Suspense>
   );
