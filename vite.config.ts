@@ -42,9 +42,9 @@ export default defineConfig(({ mode }) => {
     },
     build: {
       // target: "esnext",
-      // minify: false,
-      minify: "terser",
-      sourcemap: "inline",
+      minify: false,
+      // minify: "terser",
+      // sourcemap: "inline",
       rollupOptions: {
         plugins: [
           polyfills(),

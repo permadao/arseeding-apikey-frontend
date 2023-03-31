@@ -1,4 +1,4 @@
-import { atom, useAtom, Provider } from "jotai";
+import { atom } from "jotai";
 import { atomsWithQuery } from "jotai-tanstack-query";
 import Everpay, { ChainType } from "everpay";
 import detectEthereumProvider from "@metamask/detect-provider";
@@ -10,18 +10,18 @@ import {
   ARSEEDING_BUNDLER_ADDRESS,
   BALANCES_KEY,
 } from "../constants";
-import fetchStatusFn from "../fetch-status";
-
-export const BaseError = class extends Error {
-  constructor(message: string) {
-    super(message);
-  }
-};
-
-type ArrayElement<ArrayType extends readonly unknown[]> =
-  ArrayType extends readonly (infer ElementType)[] ? ElementType : never;
-
-export const accountAtom = atom<string | null>(null);
+import fetchStatusFn from "../api/fetch-status";
+import { loadable } from "jotai/utils";
+import {
+  TagCannotBeNullError,
+  AmountInvalidError,
+  CannotFindMetamaskWalletError,
+} from "../errors";
+import { sleep } from "../tools";
+import { topupTagAtom, topupAmountAtom, accountAtom } from "./primitiveAtoms";
+import { ArrayElement } from "../types";
+import { fetchBundlerAddress } from "../api";
+export * from "./primitiveAtoms";
 
 // get bundler address here:
 // https://arseed.web3infra.dev/bundle/bundler
@@ -35,18 +35,10 @@ export const [statusAtom] = atomsWithQuery((get) => ({
 
 export const [arseedBundlerAddressAtom] = atomsWithQuery(() => ({
   queryKey: [ARSEEDING_BUNDLER_ADDRESS],
-  queryFn: async () => {
-    const res = await fetch(`https://arseed.web3infra.dev/bundle/bundler`);
-    return (
-      (await res.json()) as {
-        bundler: string;
-      }
-    ).bundler;
-  },
+  queryFn: fetchBundlerAddress,
   retry: true,
   retryDelay: 2000,
 }));
-export const CannotFindMetamaskWalletError = class extends BaseError {};
 export const metamaskProviderAtom = atom(async () => {
   // MOCK delay
   await sleep(1000);
@@ -84,7 +76,6 @@ export const everpayAtom = atom(async (get) => {
 
   return everpay;
 });
-const sleep = (t: number) => new Promise((resolve) => setTimeout(resolve, t));
 
 export const tokensInfoAtom = atom(async (get) => {
   // MOCK: delay
@@ -139,11 +130,6 @@ export const getApikeyAtom = atom(async (get) => {
   };
 });
 
-import { loadable } from "jotai/utils";
-
-export const topupTokenSymbolAtom = atom<string | null>(null);
-export const topupTagAtom = atom<string | null>(null);
-export const topupAmountAtom = atom<number>(0);
 export const topupToApikeyAtom = atom(async (get) => {
   const tag = get(topupTagAtom);
   const amount = get(topupAmountAtom);
@@ -177,6 +163,3 @@ export const connectWalletFnAtom = atom(async (get) => {
 });
 export const loadableConnectWalletFnAtom = loadable(connectWalletFnAtom);
 export const loadableTopupToApikeyAtom = loadable(topupToApikeyAtom);
-
-export const AmountInvalidError = class extends BaseError {};
-export const TagCannotBeNullError = class extends BaseError {};
