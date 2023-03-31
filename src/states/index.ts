@@ -1,4 +1,4 @@
-import { atom } from "jotai";
+import { atom, useAtom } from "jotai";
 import { atomsWithQuery } from "jotai-tanstack-query";
 import Everpay, { ChainType } from "everpay";
 import detectEthereumProvider from "@metamask/detect-provider";
@@ -19,7 +19,7 @@ import {
 } from "../errors";
 import { sleep } from "../tools";
 import { topupTagAtom, topupAmountAtom, accountAtom } from "./primitiveAtoms";
-import { ArrayElement, OrderKey } from "../types";
+import { OrderKey } from "../types";
 import { fetchBundlerAddress, getApikey } from "../api";
 export * from "./primitiveAtoms";
 
@@ -39,21 +39,31 @@ export const [arseedBundlerAddressAtom] = atomsWithQuery(() => ({
   retry: true,
   retryDelay: 2000,
 }));
-export const metamaskProviderAtom = atom(async () => {
-  // MOCK delay
-  await sleep(1000);
-  const p: providers.ExternalProvider | null = await detectEthereumProvider({
-    mustBeMetaMask: false,
-  });
-  if (!p) {
-    throw new CannotFindMetamaskWalletError("can not find metamask wallet");
+
+export const metamaskProviderAtom = atom(
+  async () => {
+    // MOCK delay
+    await sleep(1000);
+    const p: providers.ExternalProvider | null = await detectEthereumProvider({
+      mustBeMetaMask: false,
+    });
+    if (!p) {
+      throw new CannotFindMetamaskWalletError("can not find metamask wallet");
+    }
+    return p;
   }
-  return p;
-});
+  // (get, set, newValue) => {
+  //   console.error({
+  //     m: "set metamask provider atom",
+  //     newValue,
+  //   });
+  // }
+);
 
 export const providerAtom = atom(async (get) => {
   const metamaskProvider = await get(metamaskProviderAtom);
-  return new ethers.providers.Web3Provider(metamaskProvider);
+  const provider = new ethers.providers.Web3Provider(metamaskProvider);
+  return provider;
 });
 export const signerAtom = atom(async (get) => {
   const provider = await get(providerAtom);

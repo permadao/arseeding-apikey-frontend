@@ -3,3 +3,4 @@ export * from "./topupToApikey";
 export * from "./arseedingBundler";
 export * from "./accountBalances";
 export * from "./topupToApikey";
+export * from "./accountState";

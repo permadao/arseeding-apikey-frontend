@@ -5,6 +5,7 @@ import Container from "@mui/material/Container";
 
 import {
   AccountBalances,
+  AccountState,
   ApikeyStatus,
   ArseedingBundler,
   Topup,
@@ -23,6 +24,9 @@ function App() {
   }
   return (
     <Container maxWidth="sm">
+      <Suspense fallback={<CircularProgress variant="solid" />}>
+        <AccountState />
+      </Suspense>
       <Suspense fallback={<CircularProgress variant="solid" />}>
         <ArseedingBundler />
       </Suspense>
