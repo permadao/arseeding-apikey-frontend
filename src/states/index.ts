@@ -19,8 +19,8 @@ import {
 } from "../errors";
 import { sleep } from "../tools";
 import { topupTagAtom, topupAmountAtom, accountAtom } from "./primitiveAtoms";
-import { ArrayElement } from "../types";
-import { fetchBundlerAddress } from "../api";
+import { ArrayElement, OrderKey } from "../types";
+import { fetchBundlerAddress, getApikey } from "../api";
 export * from "./primitiveAtoms";
 
 // get bundler address here:
@@ -92,10 +92,7 @@ export const [balancesAtom] = atomsWithQuery((get) => ({
   queryFn: async () => {
     const everpay = await get(everpayAtom);
     const balances = await everpay.balances();
-    const orderKey: Array<keyof ArrayElement<typeof balances>> = [
-      "balance",
-      "symbol",
-    ];
+    const orderKey: OrderKey<typeof balances> = ["balance", "symbol"];
     const orderPat: Array<"desc" | "asc"> = ["desc", "asc"];
     return orderBy(balances, orderKey, orderPat).filter(
       (e) => e.balance !== "0"
@@ -112,15 +109,7 @@ export const getApikeyAtom = atom(async (get) => {
     // https://www.notion.so/permadao/123-3b62f09dcc2c4076886f40fdf7252e1d
     const curTime = ~~(new Date().getTime() / 1000);
     const signature = await signer.signMessage(curTime.toString());
-
-    const rep = await fetch(
-      `https://arseed.web3infra.dev/apikey/${curTime}/${signature}`
-    );
-    const res = (await rep.json()) as unknown as
-      | string
-      | {
-          error: string;
-        };
+    const res = await getApikey(curTime, signature);
 
     // report error here.
     if (isString(res)) {
@@ -154,12 +143,9 @@ export const topupToApikeyAtom = atom(async (get) => {
   };
 });
 export const connectWalletFnAtom = atom(async (get) => {
-  const metamaskProvider = await get(metamaskProviderAtom);
-  return async () => {
-    return (await metamaskProvider.request!({
-      method: "eth_requestAccounts",
-    })) as string[];
-  };
+  const provider = await get(providerAtom);
+  return async () =>
+    (await provider.send("eth_requestAccounts", [])) as string[];
 });
 export const loadableConnectWalletFnAtom = loadable(connectWalletFnAtom);
 export const loadableTopupToApikeyAtom = loadable(topupToApikeyAtom);

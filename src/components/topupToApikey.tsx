@@ -80,7 +80,6 @@ export function Topup() {
           sx={{ mb: 1 }}
           value={topupAmount}
           onChange={handleChangeAmount}
-          // slotProps={null}
         />
         <Suspense fallback={<Skeleton variant="rectangular" height={50} />}>
           <TokenList />

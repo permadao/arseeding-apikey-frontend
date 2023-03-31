@@ -1,4 +1,3 @@
-import * as React from "react";
 import { deepmerge } from "@mui/utils";
 import type {} from "@mui/material/themeCssVarsAugmentation";
 import {
@@ -101,7 +100,28 @@ declare module "@mui/material/SvgIcon" {
   }
 }
 
-const muiTheme = extendMuiTheme();
+const muiTheme = extendMuiTheme({
+  typography: {
+    h1: {
+      overflowWrap: "anywhere",
+    },
+    h2: {
+      overflowWrap: "anywhere",
+    },
+    h3: {
+      overflowWrap: "anywhere",
+    },
+    h4: {
+      overflowWrap: "anywhere",
+    },
+    body1: {
+      overflowWrap: "anywhere",
+    },
+    body2: {
+      overflowWrap: "anywhere",
+    },
+  },
+});
 
 const joyTheme = extendJoyTheme({
   cssVarPrefix: "mui",

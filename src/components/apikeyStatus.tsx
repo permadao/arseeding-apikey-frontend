@@ -19,8 +19,12 @@ export function ApikeyStatus() {
   const [data] = useAtom(statusAtom);
   const [getApikeyFn] = useAtom(getApikeyAtom);
   const [apikey, setApikey] = useState<string | null>(null);
-  if (data.error) {
-    return <div>error</div>;
+  if (data.error && data.error === "record not found") {
+    return (
+      <div>
+        record not found. topup to register current address of a apikey.
+      </div>
+    );
   }
   const handleGetApikey = async () => {
     const apikey = await getApikeyFn();
