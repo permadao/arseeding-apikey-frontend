@@ -6,6 +6,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/joy/Typography";
 import { Status, Topup } from "./components";
 import { ConnectWallet } from "./components/connectWallet";
+import CircularProgress from "@mui/joy/CircularProgress";
 
 function CurrentAccountBalances() {
   const [account] = useAtom(accountAtom);
@@ -44,26 +45,28 @@ function App() {
     );
   }
   return (
-    <Container maxWidth="sm">
-      <Box>
-        <Suspense fallback="loading arseeding bundler address">
-          <ArseedingBundler />
-        </Suspense>
-      </Box>
-      <Box>
-        <Suspense fallback="loading balances of current account">
-          <CurrentAccountBalances />
-        </Suspense>
-      </Box>
-      <Box>
-        <Status />
-      </Box>
-      <Box>
-        <Suspense fallback="loading topup component...">
-          <Topup />
-        </Suspense>
-      </Box>
-    </Container>
+    <Suspense fallback={<CircularProgress variant="solid" />}>
+      <Container maxWidth="sm">
+        <Box>
+          <Suspense fallback={<CircularProgress variant="solid" />}>
+            <ArseedingBundler />
+          </Suspense>
+        </Box>
+        <Box>
+          <Suspense fallback={<CircularProgress variant="solid" />}>
+            <CurrentAccountBalances />
+          </Suspense>
+        </Box>
+        <Box>
+          <Status />
+        </Box>
+        <Box>
+          <Suspense fallback={<CircularProgress variant="solid" />}>
+            <Topup />
+          </Suspense>
+        </Box>
+      </Container>
+    </Suspense>
   );
 }
 
