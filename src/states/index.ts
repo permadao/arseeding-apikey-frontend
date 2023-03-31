@@ -43,7 +43,7 @@ export const metamaskProviderAtom = atom(async () => {
   // MOCK delay
   await sleep(1000);
   const p: providers.ExternalProvider | null = await detectEthereumProvider({
-    mustBeMetaMask: true,
+    mustBeMetaMask: false,
   });
   if (!p) {
     throw new CannotFindMetamaskWalletError("can not find metamask wallet");
