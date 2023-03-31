@@ -37,7 +37,7 @@ export function StoringFees() {
 
   return (
     <Box>
-      <Typography level="h4">Coat estimator:</Typography>
+      <Typography level="h4">Cost estimator:</Typography>
       <Container>
         <MyBox
           bytes={topupStoringSize}
