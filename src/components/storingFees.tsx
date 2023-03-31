@@ -11,6 +11,7 @@ import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/joy/Typography";
+import Skeleton from "@mui/material/Skeleton";
 
 import * as ethers from "ethers";
 import { formatUnits, formatBytes } from "../tools";
@@ -20,7 +21,8 @@ export function StoringFees() {
   const [topupStoringSize] = useAtom(topupStoringSizeAtom);
 
   if (fetchStoringFee.state === "loading") {
-    return <Typography>Select a token to estimate storage cast.</Typography>;
+    return <Skeleton height={200} />;
+    // return <Typography>Select a token to estimate storage cast.</Typography>;
   }
   if (fetchStoringFee.state === "hasError") {
     return <Typography>Storage cost load error.</Typography>;

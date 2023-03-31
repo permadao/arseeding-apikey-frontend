@@ -45,6 +45,8 @@ export const getStoringFee = async ({
       `currency or size error: currency: ${currency}, size: ${size}`
     );
   }
+  // MOCK delay
+  await sleep(1000);
   const res = await fetch(
     `https://arseed.web3infra.dev/bundle/fee/${size}/${currency}`
   );
