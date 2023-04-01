@@ -16,6 +16,7 @@ import {
   TagCannotBeNullError,
   AmountInvalidError,
   CannotFindMetamaskWalletError,
+  AcountNotFoundError,
 } from "../errors";
 import { sleep } from "../tools";
 import {
@@ -95,7 +96,7 @@ export const everpayAtom = atom(async (get) => {
   // TODO: check lenght
   const account = get(accountAtom);
   if (!account) {
-    throw new Error("account not found");
+    throw new AcountNotFoundError("account not found");
   }
   const signer = await get(signerAtom);
   const everpay = new Everpay({
@@ -122,16 +123,24 @@ export const [balancesAtom] = atomsWithQuery((get) => ({
   queryFn: async () => {
     const everpay = await get(everpayAtom);
     const balances = await everpay.balances();
-    const orderKey: OrderKey<typeof balances> = ["balance", "symbol"];
-    const orderPat: Array<"desc" | "asc"> = ["desc", "asc"];
-    return orderBy(balances, orderKey, orderPat).filter(
-      (e) => e.balance !== "0"
-    );
+    return balances;
   },
   refetchInterval: 2000,
   retry: true,
   retryDelay: 2000,
 }));
+
+export const notZeroBalancesAtom = atom(async (get) => {
+  const balances = await get(balancesAtom);
+  return balances.filter((e) => e.balance !== "0");
+});
+
+export const sortedBalancesAtom = atom(async (get) => {
+  const balances = await get(notZeroBalancesAtom);
+  const orderKey: OrderKey<typeof balances> = ["balance", "symbol"];
+  const orderPat: Array<"desc" | "asc"> = ["desc", "asc"];
+  return orderBy(balances, orderKey, orderPat);
+});
 
 export const getApikeyAtom = atom(async (get) => {
   const signer = await get(signerAtom);

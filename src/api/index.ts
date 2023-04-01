@@ -1,7 +1,9 @@
+import { CurrencyOrSizeInvalidError, QueryKeyLengthError } from "../errors";
 import { sleep } from "../tools";
 
 export * from "./fetch-status";
 export const fetchBundlerAddress = async () => {
+  // MOCK delay
   await sleep(2000);
   const res = await fetch(`https://arseed.web3infra.dev/bundle/bundler`);
   const data: { bundler: string } = await res.json();
@@ -37,13 +39,13 @@ export const getStoringFee = async ({
   queryKey: (string | number | null)[];
 }) => {
   if (queryKey.length !== 3) {
-    throw new Error("length of queryKey must be 2.");
+    throw new QueryKeyLengthError("length of queryKey must be 2.");
   }
   const currency = queryKey[1];
   const size = queryKey[2];
 
   if (!currency || !size) {
-    throw new Error(
+    throw new CurrencyOrSizeInvalidError(
       `currency or size error: currency: ${currency}, size: ${size}`
     );
   }
