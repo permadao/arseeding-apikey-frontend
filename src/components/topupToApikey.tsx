@@ -94,9 +94,20 @@ export function Topup() {
 
 function TopupButton() {
   const [topupTag] = useAtom(topupTagAtom);
+  const [balances] = useAtom(balancesAtom);
   const [topupAmount] = useAtom(topupAmountAtom);
   const [topupFn] = useAtom(loadableTopupToApikeyAtom);
-  const isDanger = !topupTag || topupAmount === 0 || !topupAmount;
+  const isLoading = topupFn.state === "loading";
+
+  const isSufficinent = useMemo(() => {
+    const t = balances.filter((b) => b.tag === topupTag);
+    return t.length === 1 && Number(t[0].balance) > topupAmount;
+  }, [balances, topupTag, topupAmount]);
+
+  const isDanger = useMemo(() => {
+    return !topupTag || topupAmount === 0 || !topupAmount || !isSufficinent;
+  }, [topupTag, topupAmount, isSufficinent]);
+
   const btnText = () => {
     if (topupAmount === 0) {
       return "Invalid topup amount.";
@@ -104,13 +115,19 @@ function TopupButton() {
     if (!topupTag) {
       return "Invalid topup token.";
     }
+
+    if (!isSufficinent) {
+      return "Insufficinent balance.";
+    }
+
     return "TOPUP";
   };
+
   return (
     <Button
       color={isDanger ? "danger" : "primary"}
       disabled={isDanger}
-      loading={topupFn.state === "loading"}
+      loading={isLoading}
       type="submit"
     >
       {btnText()}
