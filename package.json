@@ -22,7 +22,6 @@
     "buffer": "^6.0.3",
     "ethers": "^5.4",
     "everpay": "^0.6.1",
-    "is-string": "^1.0.7",
     "jotai": "^2.0.3",
     "jotai-tanstack-query": "^0.6.0",
     "lodash": "^4.17.21",

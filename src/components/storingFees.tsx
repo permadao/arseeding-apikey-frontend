@@ -27,7 +27,7 @@ export function StoringFees() {
   if (fetchStoringFee.state === "hasError") {
     return <Typography>Storage cost load error.</Typography>;
   }
-  if (fetchStoringFee.data.error) {
+  if ("error" in fetchStoringFee.data) {
     return (
       <Typography>
         Estimating storage costs fail: {fetchStoringFee.data.error}

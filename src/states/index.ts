@@ -4,7 +4,6 @@ import Everpay, { ChainType } from "everpay";
 import detectEthereumProvider from "@metamask/detect-provider";
 import { ethers, providers } from "ethers";
 import { orderBy } from "lodash";
-import isString from "is-string";
 import {
   ACCOUNT_STATUS_QUERY_KEY,
   ARSEEDING_BUNDLER_ADDRESS,
@@ -143,7 +142,7 @@ export const getApikeyAtom = atom(async (get) => {
     const res = await getApikey(curTime, signature);
 
     // report error here.
-    if (isString(res)) {
+    if (typeof res === "string") {
       return res;
     }
     throw new Error(res.error);

@@ -19,13 +19,15 @@ export const getApikey = async (curTime: number, signature: string) => {
   return data;
 };
 
-export type GetStoringFeeRep = {
-  currency: string;
-  decimals: number;
-  finalFee: string;
-} & {
-  error?: string;
-};
+export type GetStoringFeeRep =
+  | {
+      currency: string;
+      decimals: number;
+      finalFee: string;
+    }
+  | {
+      error: string;
+    };
 
 // https://web3infra.dev/zh-cn/docs/arseeding/sdk/arseeding-js/bundle#%E6%9F%A5%E8%AF%A2-bundle-item-%E5%AD%98%E5%82%A8%E8%B4%B9%E7%94%A8
 // https://web3infra.dev/zh-cn/docs/arseeding/api/bundle#get-bundle-fee
