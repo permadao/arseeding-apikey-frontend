@@ -130,16 +130,16 @@ export const [balancesAtom] = atomsWithQuery((get) => ({
   retryDelay: 2000,
 }));
 
-export const notZeroBalancesAtom = atom(async (get) => {
-  const balances = await get(balancesAtom);
-  return balances.filter((e) => e.balance !== "0");
-});
-
 export const sortedBalancesAtom = atom(async (get) => {
-  const balances = await get(notZeroBalancesAtom);
+  const balances = await get(balancesAtom);
   const orderKey: OrderKey<typeof balances> = ["balance", "symbol"];
   const orderPat: Array<"desc" | "asc"> = ["desc", "asc"];
   return orderBy(balances, orderKey, orderPat);
+});
+
+export const notZeroBalancesAtom = atom(async (get) => {
+  const balances = await get(sortedBalancesAtom);
+  return balances.filter((e) => e.balance !== "0");
 });
 
 export const getApikeyAtom = atom(async (get) => {

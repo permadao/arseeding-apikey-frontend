@@ -1,11 +1,11 @@
 import { useAtom } from "jotai";
-import { accountAtom, sortedBalancesAtom } from "../states";
+import { accountAtom, notZeroBalancesAtom } from "../states";
 import Typography from "@mui/joy/Typography";
 import Box from "@mui/material/Box";
 
 export function AccountBalances() {
   const [account] = useAtom(accountAtom);
-  const [balances] = useAtom(sortedBalancesAtom);
+  const [balances] = useAtom(notZeroBalancesAtom);
   return (
     <Box>
       <Typography level="body2">account address: {account}</Typography>

@@ -1,4 +1,4 @@
-import { useState, Suspense } from "react";
+import { useState, Suspense, useMemo } from "react";
 import {
   topupTagAtom,
   topupAmountAtom,
@@ -6,6 +6,7 @@ import {
   topupTokenSymbolAtom,
   tokensInfoAtom,
   balancesAtom,
+  sortedBalancesAtom,
 } from "../states";
 import { useAtom } from "jotai";
 import { toast } from "react-toastify";
@@ -117,11 +118,40 @@ function TopupButton() {
   );
 }
 
+const tokenSymbolBoxStyle = {
+  justifyContent: "flex-start",
+  alignItems: "center",
+  display: "flex",
+  width: "100%",
+};
+const tokenBalanceTypoStyle = {
+  justifyContent: "flex-start",
+  alignItems: "center",
+  display: "flex",
+  flexGrow: 1,
+};
+
 function TokenList() {
-  const [balances] = useAtom(balancesAtom);
+  const [sortedBalances] = useAtom(sortedBalancesAtom);
   const [tokensInfo] = useAtom(tokensInfoAtom);
   const [, setTopupTokenSymbol] = useAtom(topupTokenSymbolAtom);
   const [topupTag, setTopupTag] = useAtom(topupTagAtom);
+
+  const list = useMemo(() => {
+    return sortedBalances.map((i) => {
+      return (
+        <Option key={i.tag} value={i.tag}>
+          <Box component="span" sx={tokenSymbolBoxStyle}>
+            <Typography component="span" sx={tokenBalanceTypoStyle}>
+              {i.symbol}
+            </Typography>
+            {i.balance}
+          </Box>
+        </Option>
+      );
+    });
+  }, [sortedBalances]);
+
   const handleSelectToken = (_: any, value: string | null) => {
     setTopupTag(value);
     const res = tokensInfo.tokenList.filter((i) => i.tag === value);
@@ -129,42 +159,14 @@ function TokenList() {
       setTopupTokenSymbol(res[0].symbol);
     }
   };
+
   return (
     <Select
       value={topupTag}
       placeholder="Choose one Token to topup"
       onChange={handleSelectToken}
     >
-      {tokensInfo.tokenList.map((t) => {
-        // time costly.
-        const b = balances.filter((i) => i.tag === t.tag)[0];
-        return (
-          <Option key={t.tag} value={t.tag}>
-            <Box
-              component="span"
-              sx={{
-                justifyContent: "flex-start",
-                alignItems: "center",
-                display: "flex",
-                width: "100%",
-              }}
-            >
-              <Typography
-                component="span"
-                sx={{
-                  justifyContent: "flex-start",
-                  alignItems: "center",
-                  display: "flex",
-                  flexGrow: 1,
-                }}
-              >
-                {t.symbol}
-              </Typography>
-              {b?.balance}
-            </Box>
-          </Option>
-        );
-      })}
+      {list}
     </Select>
   );
 }
