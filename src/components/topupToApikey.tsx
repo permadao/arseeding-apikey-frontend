@@ -5,6 +5,7 @@ import {
   loadableTopupToApikeyAtom,
   topupTokenSymbolAtom,
   tokensInfoAtom,
+  balancesAtom,
 } from "../states";
 import { useAtom } from "jotai";
 import { toast } from "react-toastify";
@@ -92,7 +93,7 @@ export function Topup() {
 
 function TopupButton() {
   const [topupTag] = useAtom(topupTagAtom);
-  const [topupAmount, setTopupAmount] = useAtom(topupAmountAtom);
+  const [topupAmount] = useAtom(topupAmountAtom);
   const [topupFn] = useAtom(loadableTopupToApikeyAtom);
   const isDanger = !topupTag || topupAmount === 0 || !topupAmount;
   const btnText = () => {
@@ -117,6 +118,7 @@ function TopupButton() {
 }
 
 function TokenList() {
+  const [balances] = useAtom(balancesAtom);
   const [tokensInfo] = useAtom(tokensInfoAtom);
   const [, setTopupTokenSymbol] = useAtom(topupTokenSymbolAtom);
   const [topupTag, setTopupTag] = useAtom(topupTagAtom);
@@ -134,9 +136,32 @@ function TokenList() {
       onChange={handleSelectToken}
     >
       {tokensInfo.tokenList.map((t) => {
+        // time costly.
+        const b = balances.filter((i) => i.tag === t.tag)[0];
         return (
           <Option key={t.tag} value={t.tag}>
-            {t.symbol}
+            <Box
+              component="span"
+              sx={{
+                justifyContent: "flex-start",
+                alignItems: "center",
+                display: "flex",
+                width: "100%",
+              }}
+            >
+              <Typography
+                component="span"
+                sx={{
+                  justifyContent: "flex-start",
+                  alignItems: "center",
+                  display: "flex",
+                  flexGrow: 1,
+                }}
+              >
+                {t.symbol}
+              </Typography>
+              {b?.balance}
+            </Box>
           </Option>
         );
       })}
