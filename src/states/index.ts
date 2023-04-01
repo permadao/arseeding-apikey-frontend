@@ -31,7 +31,7 @@ export * from "./primitiveAtoms";
 
 // get bundler address here:
 // https://arseed.web3infra.dev/bundle/bundler
-export const [statusAtom] = atomsWithQuery((get) => ({
+export const [apikeyStatusAtom] = atomsWithQuery((get) => ({
   queryKey: [ACCOUNT_STATUS_QUERY_KEY, get(accountAtom)],
   queryFn: fetchStatusFn,
   refetchInterval: 2000,

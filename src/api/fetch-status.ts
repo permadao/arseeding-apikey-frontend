@@ -1,9 +1,11 @@
-export type StatusType = {
-  estimateCap: string;
-  tokenBalance: Record<string, string>;
-} & {
-  error?: string;
-};
+export type StatusType =
+  | {
+      estimateCap: string;
+      tokenBalance: Record<string, string>;
+    }
+  | {
+      error: string;
+    };
 
 export default async function ({ queryKey }: { queryKey: (string | null)[] }) {
   const address = queryKey[1];
