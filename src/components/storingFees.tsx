@@ -1,17 +1,14 @@
 import { useAtom } from "jotai";
 import {
-  fetchStoringFeeAtom,
   loadableFetchStoringFeeAtom,
   topupAmountAtom,
   topupStoringSizeAtom,
-  topupTagAtom,
-  topupTokenSymbolAtom,
 } from "../states";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Typography from "@mui/joy/Typography";
 import Skeleton from "@mui/material/Skeleton";
+import BigNumber from "bignumber.js";
 
 import * as ethers from "ethers";
 import { formatUnits, formatBytes } from "../tools";
@@ -91,7 +88,7 @@ function MyBox({
   const feeNumScaledText = formatUnits(feeNumScaled, decimals, 4);
 
   const handleClickBtn = () => {
-    setTopupAmount(parseFloat(feeNumScaledText));
+    setTopupAmount(BigNumber(feeNumScaledText));
   };
   return (
     <Box

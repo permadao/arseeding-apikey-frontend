@@ -19,6 +19,7 @@
     "@mui/utils": "^5.11.13",
     "@tanstack/query-core": "^4.27.0",
     "@tanstack/react-query": "^4.28.0",
+    "bignumber.js": "^9.1.1",
     "buffer": "^6.0.3",
     "ethers": "^5.4",
     "everpay": "^0.6.1",

@@ -19,6 +19,8 @@ import Skeleton from "@mui/material/Skeleton";
 import Input from "@mui/joy/Input";
 import Option from "@mui/joy/Option";
 import Select from "@mui/joy/Select";
+import { ethers } from "ethers";
+import BigNumber from "bignumber.js";
 
 export function Topup() {
   const [topupTag] = useAtom(topupTagAtom);
@@ -27,7 +29,9 @@ export function Topup() {
   const [hash, setHash] = useState<string | null>();
   const [topupTokenSymbol] = useAtom(topupTokenSymbolAtom);
 
-  const handleTopup = async () => {
+  const handleTopup = async (event: React.FormEvent<HTMLFormElement>) => {
+    // prevent default behavior of the Browser.
+    event.preventDefault();
     if (topupFn.state !== "hasData") {
       return;
     }
@@ -44,8 +48,13 @@ export function Topup() {
     setHash(res.everHash);
   };
   const handleChangeAmount = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const amount = parseFloat(event.target.value);
-    setTopupAmount(amount);
+    const value = event.target.value;
+    // seems not need to check here...
+    if (!value || value.trim() === "") {
+      setTopupAmount(BigNumber(0));
+      return;
+    }
+    setTopupAmount(BigNumber(value));
   };
 
   return (
@@ -66,21 +75,16 @@ export function Topup() {
 
       <Typography>selected token's tag: {topupTag}</Typography>
       <Typography>
-        topup amount: {topupAmount}
+        topup amountd: {topupAmount.toString()}
         {topupTokenSymbol}
       </Typography>
-      <form
-        onSubmit={(event) => {
-          event.preventDefault();
-          handleTopup();
-        }}
-      >
+      <form onSubmit={handleTopup}>
         <Input
           type="number"
           placeholder="topup amount"
           required
           sx={{ mb: 1 }}
-          value={topupAmount}
+          value={topupAmount.toNumber()}
           onChange={handleChangeAmount}
         />
         <Suspense fallback={<Skeleton variant="rectangular" height={50} />}>
@@ -97,27 +101,28 @@ function TopupButton() {
   const [balances] = useAtom(balancesAtom);
   const [topupAmount] = useAtom(topupAmountAtom);
   const [topupFn] = useAtom(loadableTopupToApikeyAtom);
-  const isLoading = topupFn.state === "loading";
 
   const isSufficinent = useMemo(() => {
     const t = balances.filter((b) => b.tag === topupTag);
-    return t.length === 1 && Number(t[0].balance) > topupAmount;
+    return t.length === 1 && BigNumber(t[0].balance).gt(topupAmount);
   }, [balances, topupTag, topupAmount]);
 
   const isDanger = useMemo(() => {
-    return !topupTag || topupAmount === 0 || !topupAmount || !isSufficinent;
+    return !topupTag || topupAmount.isZero() || !topupAmount || !isSufficinent;
   }, [topupTag, topupAmount, isSufficinent]);
 
+  const isLoading = topupFn.state === "loading";
+
   const btnText = () => {
-    if (topupAmount === 0) {
-      return "Invalid topup amount.";
+    if (topupAmount.isZero()) {
+      return "Invalid topup amount";
     }
     if (!topupTag) {
-      return "Invalid topup token.";
+      return "Invalid topup token";
     }
 
     if (!isSufficinent) {
-      return "Insufficinent balance.";
+      return "Insufficinent balance";
     }
 
     return "TOPUP";
