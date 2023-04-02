@@ -13,21 +13,24 @@ import {
 } from "./components";
 import CircularProgress from "@mui/joy/CircularProgress";
 import { ConnectWallet } from "./components/connectWallet";
+import { MyAppBar } from "./components/appBar";
 
 function App() {
   const [account] = useAtom(accountAtom);
-  if (!account) {
-    return (
-      <Container maxWidth="sm">
-        <ConnectWallet />
-      </Container>
-    );
-  }
+
   return (
-    <Container maxWidth="sm">
-      <Suspense fallback={<CircularProgress variant="solid" />}>
-        <AccountState />
-      </Suspense>
+    <>
+      <MyAppBar />
+      <Container maxWidth="sm">
+        {account ? <ConnectedView /> : <ConnectWallet />}
+      </Container>
+    </>
+  );
+}
+
+function ConnectedView() {
+  return (
+    <>
       <Suspense fallback={<CircularProgress variant="solid" />}>
         <ArseedingBundler />
       </Suspense>
@@ -43,7 +46,7 @@ function App() {
       <Suspense fallback={<CircularProgress variant="solid" />}>
         <Topup />
       </Suspense>
-    </Container>
+    </>
   );
 }
 

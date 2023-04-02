@@ -5,7 +5,7 @@ import { useEffect } from "react";
 
 export function AccountState() {
   const [metamaskProvider] = useAtom(metamaskProviderAtom);
-  const [, setAccount] = useAtom(accountAtom);
+  const [account, setAccount] = useAtom(accountAtom);
 
   useEffect(() => {
     const provider = metamaskProvider as { on: any; removeListener: any };
@@ -22,5 +22,9 @@ export function AccountState() {
   const handleClick = () => {
     // setMetamaskProviderAtom("hahaha");
   };
-  return <Button onClick={handleClick}>Wallet Connected</Button>;
+  return (
+    <Button loading={typeof account !== "string"} onClick={handleClick}>
+      Wallet Connected
+    </Button>
+  );
 }
