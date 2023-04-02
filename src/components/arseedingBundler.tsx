@@ -1,13 +1,15 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/joy/Typography";
 import { useAtom } from "jotai";
-import { arseedBundlerAddressAtom } from "../states";
+import { arseedingBundlerAddressAtom } from "../states";
 
 export function ArseedingBundler() {
-  const [arseedBundlerAddress] = useAtom(arseedBundlerAddressAtom);
+  const [arseedingBundlerAddress] = useAtom(arseedingBundlerAddressAtom);
   return (
     <Box>
-      <Typography>arseeding bundler address: {arseedBundlerAddress}</Typography>
+      <Typography>
+        arseeding bundler address: {arseedingBundlerAddress}
+      </Typography>
     </Box>
   );
 }

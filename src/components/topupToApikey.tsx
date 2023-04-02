@@ -1,14 +1,16 @@
 import { useState, Suspense, useMemo } from "react";
 import {
-  topupTagAtom,
   topupAmountAtom,
-  loadableTopupToApikeyAtom,
   topupTokenSymbolAtom,
   tokensInfoAtom,
   balancesAtom,
   sortedBalancesAtom,
+  topupApikeyAtom,
+  topupTagAtom,
+  everpayAtom,
+  arseedingBundlerAddressAtom,
 } from "../states";
-import { useAtom } from "jotai";
+import { atom, useAtom } from "jotai";
 import { toast } from "react-toastify";
 import Box from "@mui/material/Box";
 import Button from "@mui/joy/Button";
@@ -19,34 +21,57 @@ import Skeleton from "@mui/material/Skeleton";
 import Input from "@mui/joy/Input";
 import Option from "@mui/joy/Option";
 import Select from "@mui/joy/Select";
-import { ethers } from "ethers";
 import BigNumber from "bignumber.js";
+
+const isTopupButtonLoadingAtom = atom(false);
 
 export function Topup() {
   const [topupTag] = useAtom(topupTagAtom);
   const [topupAmount, setTopupAmount] = useAtom(topupAmountAtom);
-  const [topupFn] = useAtom(loadableTopupToApikeyAtom);
+  const [, topupApikeyFn] = useAtom(topupApikeyAtom);
   const [hash, setHash] = useState<string | null>();
   const [topupTokenSymbol] = useAtom(topupTokenSymbolAtom);
+  const [, setIsTopupButtonLoading] = useAtom(isTopupButtonLoadingAtom);
 
-  const handleTopup = async (event: React.FormEvent<HTMLFormElement>) => {
+  const testHandleTopup = async (event: React.FormEvent<HTMLFormElement>) => {
     // prevent default behavior of the Browser.
     event.preventDefault();
-    if (topupFn.state !== "hasData") {
-      return;
-    }
-    const res = await toast.promise(topupFn.data, {
-      pending: "pending transaction",
-      success: "transaction has been minted",
-      error: {
-        render(err) {
-          const error = err.data as unknown as Error;
-          return error.message;
-        },
+
+    const res = await toast.promise(
+      async () => {
+        const data = await topupApikeyFn({
+          tagAtom: topupTagAtom,
+          amountAtom: topupAmountAtom,
+          everpayAtom: everpayAtom,
+          arseedingBundlerAddressAtom,
+        });
+        return data;
       },
-    });
+      {
+        pending: {
+          render() {
+            setIsTopupButtonLoading(true);
+            return "pending transaction";
+          },
+        },
+        success: {
+          render() {
+            setIsTopupButtonLoading(false);
+            return "transaction has been minted";
+          },
+        },
+        error: {
+          render(err) {
+            setIsTopupButtonLoading(false);
+            const error = err.data as unknown as Error;
+            return error.message;
+          },
+        },
+      }
+    );
     setHash(res.everHash);
   };
+
   const handleChangeAmount = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     // seems not need to check here...
@@ -78,7 +103,7 @@ export function Topup() {
         topup amountd: {topupAmount.toString()}
         {topupTokenSymbol}
       </Typography>
-      <form onSubmit={handleTopup}>
+      <form onSubmit={testHandleTopup}>
         <Input
           type="number"
           placeholder="topup amount"
@@ -100,7 +125,7 @@ function TopupButton() {
   const [topupTag] = useAtom(topupTagAtom);
   const [balances] = useAtom(balancesAtom);
   const [topupAmount] = useAtom(topupAmountAtom);
-  const [topupFn] = useAtom(loadableTopupToApikeyAtom);
+  const [isLoading] = useAtom(isTopupButtonLoadingAtom);
 
   const isSufficinent = useMemo(() => {
     const t = balances.filter((b) => b.tag === topupTag);
@@ -110,8 +135,6 @@ function TopupButton() {
   const isDanger = useMemo(() => {
     return !topupTag || topupAmount.isZero() || !topupAmount || !isSufficinent;
   }, [topupTag, topupAmount, isSufficinent]);
-
-  const isLoading = topupFn.state === "loading";
 
   const btnText = () => {
     if (topupAmount.isZero()) {

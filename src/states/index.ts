@@ -44,7 +44,7 @@ export const [apikeyStatusAtom] = atomsWithQuery((get) => ({
   retryDelay: 2000,
 }));
 
-export const [arseedBundlerAddressAtom] = atomsWithQuery(() => ({
+export const [arseedingBundlerAddressAtom] = atomsWithQuery(() => ({
   queryKey: [ARSEEDING_BUNDLER_ADDRESS],
   queryFn: fetchBundlerAddress,
   retry: true,
@@ -180,29 +180,43 @@ export const getApikeyAtom = atom(
 
 export const loadableGetApikeyFnAtom = loadable(getApikeyAtom);
 
-export const topupToApikeyAtom = atom(async (get) => {
-  const tag = get(topupTagAtom);
-  const amount = get(topupAmountAtom);
-  const everpay = await get(everpayAtom);
-  const arseedingBundlerAddress = await get(arseedBundlerAddressAtom);
-  // MOCK delay for test
-  await sleep(1000);
+export type topupApikeyParams = {
+  tagAtom: typeof topupTagAtom;
+  amountAtom: typeof topupAmountAtom;
+  everpayAtom: typeof everpayAtom;
+  arseedingBundlerAddressAtom: typeof arseedingBundlerAddressAtom;
+};
+export const topupApikeyAtom = atom(
+  // async () => null,
+  null,
+  async (get, _set, value: topupApikeyParams) => {
+    const tag = get(value.tagAtom);
+    const amount = get(value.amountAtom);
+    const everpay = await get(value.everpayAtom);
+    const arseedingBundlerAddress = await get(
+      value.arseedingBundlerAddressAtom
+    );
+    // MOCK delay for test
+    await sleep(1000);
 
-  return async () => {
     if (!tag) {
       return Promise.reject(new TagCannotBeNullError("tag can not be null"));
     }
     if (!amount || amount.lt(0)) {
       return Promise.reject(new AmountInvalidError("amount error"));
     }
-    return await everpay.transfer({
+    const data = { appName: "arseeding", action: "apikeyPayment" };
+    const res = await everpay.transfer({
       tag,
       amount: amount.toString(),
       to: arseedingBundlerAddress,
-      data: { appName: "arseeding", action: "apikeyPayment" },
+      data,
     });
-  };
-});
+
+    return res;
+  }
+);
+
 export const connectWalletFnAtom = atom(async (get) => {
   const provider = await get(providerAtom);
   return async () =>
@@ -210,4 +224,3 @@ export const connectWalletFnAtom = atom(async (get) => {
 });
 
 export const loadableConnectWalletFnAtom = loadable(connectWalletFnAtom);
-export const loadableTopupToApikeyAtom = loadable(topupToApikeyAtom);
