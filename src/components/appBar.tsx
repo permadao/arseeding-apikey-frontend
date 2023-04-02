@@ -21,7 +21,6 @@ export function MyAppBar() {
               sx={{
                 mr: 2,
                 display: { xs: "none", md: "flex" },
-                fontFamily: "monospace",
                 fontWeight: 700,
                 color: "#fff",
                 textDecoration: "none",
@@ -37,7 +36,6 @@ export function MyAppBar() {
                 mr: 2,
                 display: { xs: "flex", md: "none" },
                 flexGrow: 1,
-                fontFamily: "monospace",
                 fontWeight: 700,
                 color: "#fff",
                 textDecoration: "none",
