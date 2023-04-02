@@ -56,9 +56,7 @@ export function MyAppBar() {
 function LoadableWalletStatusBtn() {
   return (
     <Suspense fallback={<CircularProgress variant="solid" />}>
-      <Tooltip title="Open settings">
-        <AccountState />
-      </Tooltip>
+      <AccountState />
     </Suspense>
   );
 }
