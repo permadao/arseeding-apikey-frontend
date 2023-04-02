@@ -2,12 +2,12 @@ import { Suspense } from "react";
 import { accountAtom } from "./states";
 import { useAtom } from "jotai";
 import Container from "@mui/material/Container";
+import Box from "@mui/material/Box";
 
 import {
   AccountBalances,
-  AccountState,
   ApikeyStatus,
-  ArseedingBundler,
+  ArseedingBundlerStatus,
   StoringFees,
   Topup,
 } from "./components";
@@ -19,21 +19,29 @@ function App() {
   const [account] = useAtom(accountAtom);
 
   return (
-    <>
+    <Box
+      display="grid"
+      sx={{
+        gridTemplateRows: "min-content 1fr min-content",
+        height: "100%",
+      }}
+    >
       <MyAppBar />
       <Container maxWidth="sm">
         {account ? <ConnectedView /> : <ConnectWallet />}
       </Container>
-    </>
+      <Container maxWidth="lg">
+        <Suspense fallback={<CircularProgress variant="solid" />}>
+          <ArseedingBundlerStatus />
+        </Suspense>
+      </Container>
+    </Box>
   );
 }
 
 function ConnectedView() {
   return (
     <>
-      <Suspense fallback={<CircularProgress variant="solid" />}>
-        <ArseedingBundler />
-      </Suspense>
       <Suspense fallback={<CircularProgress variant="solid" />}>
         <AccountBalances />
       </Suspense>

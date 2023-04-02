@@ -3,7 +3,7 @@ import Typography from "@mui/joy/Typography";
 import { useAtom } from "jotai";
 import { arseedingBundlerAddressAtom } from "../states";
 
-export function ArseedingBundler() {
+export function ArseedingBundlerStatus() {
   const [arseedingBundlerAddress] = useAtom(arseedingBundlerAddressAtom);
   return (
     <Box>
