@@ -146,21 +146,39 @@ export const notZeroBalancesAtom = atom(async (get) => {
   return balances.filter((e) => e.balance !== "0");
 });
 
-export const getApikeyAtom = atom(async (get) => {
-  const signer = await get(signerAtom);
-  return async () => {
+// export const getApikeyAtom = atom(async (get) => {
+//   const signer = await get(signerAtom);
+//   return async () => {
+//     // https://www.notion.so/permadao/123-3b62f09dcc2c4076886f40fdf7252e1d
+//     const curTime = ~~(new Date().getTime() / 1000);
+//     const signature = await signer.signMessage(curTime.toString());
+//     const res = await getApikey(curTime, signature);
+
+//     // report error here.
+//     if (typeof res === "string") {
+//       return res;
+//     }
+//     throw new Error(res.error);
+//   };
+// });
+
+export const getApikeyAtom = atom(
+  () => null,
+  async (get, _set, value: { signerAtom: typeof signerAtom }) => {
+    const signer = await get(value.signerAtom);
     // https://www.notion.so/permadao/123-3b62f09dcc2c4076886f40fdf7252e1d
     const curTime = ~~(new Date().getTime() / 1000);
     const signature = await signer.signMessage(curTime.toString());
     const res = await getApikey(curTime, signature);
-
     // report error here.
     if (typeof res === "string") {
       return res;
     }
     throw new Error(res.error);
-  };
-});
+  }
+);
+
+export const loadableGetApikeyFnAtom = loadable(getApikeyAtom);
 
 export const topupToApikeyAtom = atom(async (get) => {
   const tag = get(topupTagAtom);

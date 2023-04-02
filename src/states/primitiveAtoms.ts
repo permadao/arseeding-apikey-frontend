@@ -6,3 +6,4 @@ export const topupTokenSymbolAtom = atom<string | null>(null);
 export const topupTagAtom = atom<string | null>(null);
 export const topupAmountAtom = atom<BigNumber>(BigNumber(0));
 export const accountAtom = atom<string | null>(null);
+export const apikeyAtom = atom<string | null>(null);

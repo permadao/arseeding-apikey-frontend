@@ -1,11 +1,18 @@
-import { useMemo, useState } from "react";
-import { apikeyStatusAtom, getApikeyAtom } from "../states";
+import { Suspense, useMemo, useState } from "react";
+import {
+  apikeyAtom,
+  apikeyStatusAtom,
+  getApikeyAtom,
+  loadableGetApikeyFnAtom,
+  signerAtom,
+} from "../states";
 import Card from "@mui/joy/Card";
 import Typography from "@mui/joy/Typography";
 import Button from "@mui/joy/Button";
-import { useAtom } from "jotai";
+import { atom, useAtom } from "jotai";
 import Box from "@mui/material/Box";
 import { formatBytes } from "../tools";
+import { loadable } from "jotai/utils";
 
 const cardStyle = () => ({
   transition: "transform 0.3s, border 0.3s, box-shadow 0.2s",
@@ -18,8 +25,7 @@ const cardStyle = () => ({
 
 export function ApikeyStatus() {
   const [apikeyStatus] = useAtom(apikeyStatusAtom);
-  const [getApikeyFn] = useAtom(getApikeyAtom);
-  const [apikey, setApikey] = useState<string | null>(null);
+  const [apikey, setApikey] = useAtom(apikeyAtom);
 
   if ("error" in apikeyStatus) {
     return (
@@ -29,11 +35,6 @@ export function ApikeyStatus() {
       </div>
     );
   }
-
-  const handleGetApikey = async () => {
-    const apikey = await getApikeyFn();
-    setApikey(apikey);
-  };
 
   return (
     <Box>
@@ -51,9 +52,43 @@ export function ApikeyStatus() {
         <ul>
           <TokenBalanceList tokenBalance={apikeyStatus.tokenBalance} />
         </ul>
-        <Button onClick={handleGetApikey}>get apikey</Button>
+        <Suspense fallback="loading get apikey button">
+          <GetApikeyButton />
+        </Suspense>
       </Card>
     </Box>
+  );
+}
+
+function GetApikeyButton() {
+  const [isDanger, setIsDanger] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [, setApikey] = useAtom(apikeyAtom);
+  const [, getApikey] = useAtom(getApikeyAtom);
+
+  const handleGetApikey = async () => {
+    try {
+      setIsDanger(false);
+      setLoading(true);
+      const apikey = await getApikey({ signerAtom });
+      setApikey(apikey);
+      setIsDanger(false);
+      setLoading(false);
+    } catch (e) {
+      setIsDanger(true);
+      setLoading(false);
+      throw e;
+    }
+  };
+
+  return (
+    <Button
+      loading={loading}
+      color={isDanger ? "danger" : "primary"}
+      onClick={handleGetApikey}
+    >
+      get apikey
+    </Button>
   );
 }
 
