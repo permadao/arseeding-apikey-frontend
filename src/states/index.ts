@@ -10,7 +10,6 @@ import {
   BALANCES_KEY,
   STORING_FEE_KEY,
 } from "../constants";
-import fetchStatusFn from "../api/fetch-status";
 import { loadable } from "jotai/utils";
 import {
   TagCannotBeNullError,
@@ -27,14 +26,19 @@ import {
   topupStoringSizeAtom,
 } from "./primitiveAtoms";
 import { OrderKey } from "../types";
-import { fetchBundlerAddress, getApikey, getStoringFee } from "../api";
+import {
+  fetchApikeyStatusFn,
+  fetchBundlerAddress,
+  getApikey,
+  getStoringFee,
+} from "../api";
 export * from "./primitiveAtoms";
 
 // get bundler address here:
 // https://arseed.web3infra.dev/bundle/bundler
 export const [apikeyStatusAtom] = atomsWithQuery((get) => ({
   queryKey: [ACCOUNT_STATUS_QUERY_KEY, get(accountAtom)],
-  queryFn: fetchStatusFn,
+  queryFn: fetchApikeyStatusFn,
   refetchInterval: 2000,
   retry: true,
   retryDelay: 2000,

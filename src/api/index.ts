@@ -1,7 +1,6 @@
 import { CurrencyOrSizeInvalidError, QueryKeyLengthError } from "../errors";
 import { sleep } from "../tools";
 
-export * from "./fetch-status";
 export const fetchBundlerAddress = async () => {
   // MOCK delay
   await sleep(2000);
@@ -20,6 +19,28 @@ export const getApikey = async (curTime: number, signature: string) => {
 
   return data;
 };
+
+export type ApikeyStatusType =
+  | {
+      estimateCap: string;
+      tokenBalance: Record<string, string>;
+    }
+  | {
+      error: string;
+    };
+
+export async function fetchApikeyStatusFn({
+  queryKey,
+}: {
+  queryKey: (string | null)[];
+}) {
+  const address = queryKey[1];
+  if (!address) throw new Error("address can not be null");
+  const res = await fetch(
+    `https://arseed.web3infura.io/apikey_info/${address}`
+  );
+  return (await res.json()) as ApikeyStatusType;
+}
 
 export type GetStoringFeeRep =
   | {
