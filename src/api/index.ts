@@ -39,7 +39,9 @@ export async function fetchApikeyStatusFn({
   const res = await fetch(
     `https://arseed.web3infura.io/apikey_info/${address}`
   );
-  return (await res.json()) as ApikeyStatusType;
+  const data = (await res.json()) as ApikeyStatusType;
+
+  return data;
 }
 
 export type GetStoringFeeRep =
