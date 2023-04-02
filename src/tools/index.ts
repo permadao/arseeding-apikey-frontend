@@ -1,7 +1,14 @@
 import { ethers } from "ethers";
 
-export const sleep = (t: number) =>
-  new Promise((resolve) => setTimeout(resolve, t));
+export const sleep = (t: number) => {
+  const mode = import.meta.env.MODE;
+  if (mode === "development") {
+    return new Promise((resolve) => setTimeout(resolve, t));
+  }
+  if (mode === "production") {
+    return Promise.resolve();
+  }
+};
 
 export function formatBytes(bytes: number, decimals = 2) {
   if (!+bytes) return "0 Bytes";
