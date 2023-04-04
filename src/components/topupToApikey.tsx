@@ -1,4 +1,4 @@
-import { useState, Suspense, useMemo } from "react";
+import { useState, Suspense, useMemo, useEffect } from "react";
 import {
   topupAmountAtom,
   topupTokenSymbolAtom,
@@ -22,7 +22,7 @@ import Input from "@mui/joy/Input";
 import Option from "@mui/joy/Option";
 import Select from "@mui/joy/Select";
 import BigNumber from "bignumber.js";
-import { StoringCostEstimator } from "./storingFees";
+import { StoringCostEstimator } from "./storingCosts";
 import { CircularProgress } from "@mui/joy";
 import Divider from "@mui/joy/Divider";
 
