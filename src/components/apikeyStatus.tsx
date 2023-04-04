@@ -1,17 +1,15 @@
-import { Suspense, useEffect, useMemo, useState } from "react";
+import { Suspense, useMemo, useState } from "react";
 import {
   apikeyAtom,
   apikeyStatusAtom,
   getApikeyAtom,
-  loadableGetApikeyFnAtom,
   signerAtom,
 } from "../states";
 import Typography from "@mui/joy/Typography";
 import Button from "@mui/joy/Button";
-import { atom, useAtom } from "jotai";
+import { useAtom } from "jotai";
 import Box from "@mui/material/Box";
 import { formatBytes } from "../tools";
-import { loadable } from "jotai/utils";
 import { Container } from "@mui/joy";
 import Tooltip from "@mui/joy/Tooltip";
 import { toast } from "react-toastify";
@@ -19,14 +17,21 @@ import { toast } from "react-toastify";
 export function ApikeyStatus() {
   const [apikeyStatus] = useAtom(apikeyStatusAtom);
 
-  useEffect(() => console.error(apikeyStatus), [apikeyStatus]);
-
   if ("error" in apikeyStatus) {
     return (
-      <div>
-        record not found. topup to register current address of a apikey.
-        {apikeyStatus.error}
-      </div>
+      <Container
+        sx={(theme) => ({
+          marginTop: theme.spacing(2),
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          color: theme.palette.text.secondary,
+        })}
+        maxWidth="lg"
+      >
+        <Typography>Topup to register current address a apikey.</Typography>
+        <Typography>{apikeyStatus.error}</Typography>
+      </Container>
     );
   }
 
@@ -34,7 +39,7 @@ export function ApikeyStatus() {
     <Container maxWidth="lg">
       <Box
         sx={(theme) => ({
-          marginTop: 5,
+          marginTop: theme.spacing(2),
           background: theme.palette.background.paper,
           padding: theme.spacing(3),
           boxShadow: theme.shadows[1],
