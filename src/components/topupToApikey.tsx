@@ -130,7 +130,13 @@ export function Topup() {
         <Suspense fallback={<CircularProgress variant="solid" />}>
           <StoringCostEstimator />
         </Suspense>
-        <Box sx={(theme) => ({ gap: theme.spacing(2), display: "flex" })}>
+        <Box
+          sx={(theme) => ({
+            marginTop: theme.spacing(2),
+            gap: theme.spacing(2),
+            display: "flex",
+          })}
+        >
           <ClearButton />
           <TopupButton />
         </Box>

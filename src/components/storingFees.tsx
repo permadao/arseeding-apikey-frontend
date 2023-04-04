@@ -14,6 +14,7 @@ import IconButton from "@mui/joy/IconButton";
 
 import * as ethers from "ethers";
 import { formatUnits, formatBytes } from "../tools";
+import { Input, Option, Select } from "@mui/joy";
 
 export function StoringCostEstimator() {
   return (
@@ -34,18 +35,18 @@ export function StoringCostEstimator() {
           <HelpOutlineIcon />
         </IconButton>
       </Box>
-      <Body />
+      <Estimator />
+      <Calculator />
     </Box>
   );
 }
 
-function Body() {
+function Estimator() {
   const [fetchStoringFee] = useAtom(loadableFetchStoringFeeAtom);
   const [topupStoringSize] = useAtom(topupStoringSizeAtom);
 
   if (fetchStoringFee.state === "loading") {
     return <Skeleton height={200} />;
-    // return <Typography>Select a token to estimate storage cast.</Typography>;
   }
   if (fetchStoringFee.state === "hasError") {
     return <Typography>Storage cost load error.</Typography>;
@@ -59,40 +60,61 @@ function Body() {
   }
 
   return (
-    <Container>
-      <MyBox
+    <Box display="grid" gridTemplateColumns="repeat(12, 1fr)">
+      <Item
         bytes={topupStoringSize}
         fee={fetchStoringFee.data.finalFee}
         scale={1}
         decimals={fetchStoringFee.data.decimals}
         symbol={fetchStoringFee.data.currency}
       />
-      <MyBox
+      <Item
         bytes={topupStoringSize}
         fee={fetchStoringFee.data.finalFee}
         scale={2}
         decimals={fetchStoringFee.data.decimals}
         symbol={fetchStoringFee.data.currency}
       />
-      <MyBox
+      <Item
         bytes={topupStoringSize}
         fee={fetchStoringFee.data.finalFee}
         scale={5}
         decimals={fetchStoringFee.data.decimals}
         symbol={fetchStoringFee.data.currency}
       />
-      <MyBox
+      <Item
         bytes={topupStoringSize}
         fee={fetchStoringFee.data.finalFee}
         scale={10}
         decimals={fetchStoringFee.data.decimals}
         symbol={fetchStoringFee.data.currency}
       />
-    </Container>
+    </Box>
   );
 }
 
-function MyBox({
+function Calculator() {
+  return (
+    <Box
+      sx={(theme) => ({
+        marginTop: theme.spacing(2),
+      })}
+    >
+      <Input
+        endDecorator={
+          <Select>
+            <Option>KB</Option>
+            <Option>MB</Option>
+            <Option>GB</Option>
+          </Select>
+        }
+      />
+      <Input />
+    </Box>
+  );
+}
+
+function Item({
   bytes,
   fee,
   decimals,
@@ -122,6 +144,7 @@ function MyBox({
         p: 2,
         border: "1px solid grey",
       }}
+      gridColumn={{ xs: "span 12", lg: "span 6" }}
     >
       <Typography>{formatBytes(bytes * scale)}</Typography>
       <Typography>
