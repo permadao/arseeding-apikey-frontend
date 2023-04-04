@@ -6,7 +6,6 @@ import {
   loadableGetApikeyFnAtom,
   signerAtom,
 } from "../states";
-import Card from "@mui/joy/Card";
 import Typography from "@mui/joy/Typography";
 import Button from "@mui/joy/Button";
 import { atom, useAtom } from "jotai";
@@ -14,10 +13,11 @@ import Box from "@mui/material/Box";
 import { formatBytes } from "../tools";
 import { loadable } from "jotai/utils";
 import { Container } from "@mui/joy";
+import Tooltip from "@mui/joy/Tooltip";
+import { toast } from "react-toastify";
 
 export function ApikeyStatus() {
   const [apikeyStatus] = useAtom(apikeyStatusAtom);
-  const [apikey] = useAtom(apikeyAtom);
 
   useEffect(() => console.error(apikeyStatus), [apikeyStatus]);
 
@@ -44,9 +44,9 @@ export function ApikeyStatus() {
         <Typography level="h4" sx={{ mb: 0.5 }}>
           Apikey 状态
         </Typography>
-        <Typography level="body2">
-          apikey: {apikey ?? "***************"}
-        </Typography>
+
+        <ApikeyContainer />
+
         <CapText bytes={apikeyStatus.estimateCap} />
         <Typography level="h2" fontSize="sm" sx={{ mb: 0.5 }}>
           token balances in this apikey:
@@ -59,6 +59,33 @@ export function ApikeyStatus() {
         </Suspense>
       </Box>
     </Container>
+  );
+}
+
+function ApikeyContainer() {
+  const [apikey] = useAtom(apikeyAtom);
+
+  if (!apikey) {
+    return <Typography level="body2">apikey: ***************</Typography>;
+  }
+  const handleCopy = async () => {
+    window.navigator.clipboard.writeText(apikey);
+    toast("copied");
+  };
+  return (
+    <Tooltip title="click to copy">
+      <Typography
+        onClick={handleCopy}
+        level="body2"
+        sx={(theme) => ({
+          ":hover": {
+            background: "#eee",
+          },
+        })}
+      >
+        apikey: {apikey}
+      </Typography>
+    </Tooltip>
   );
 }
 

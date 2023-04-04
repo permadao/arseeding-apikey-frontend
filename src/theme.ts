@@ -138,6 +138,8 @@ const muiTheme = extendMuiTheme({
       palette: {
         primary: {
           main: "#000",
+          [200]: "#00000022",
+          mainChannel: "#000",
         },
       },
     },
@@ -204,6 +206,8 @@ const joyTheme = extendJoyTheme({
           solidColor: "var(--mui-palette-primary-contrastText)",
           solidBg: "var(--mui-palette-primary-main)",
           solidHoverBg: "var(--mui-palette-primary-dark)",
+          solidDisabledBg: "var(--mui-palette-primary-200)",
+          softColor: "#000",
           plainColor: "var(--mui-palette-primary-main)",
           plainHoverBg:
             "rgba(var(--mui-palette-primary-mainChannel) / var(--mui-palette-action-hoverOpacity))",
