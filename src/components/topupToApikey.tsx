@@ -123,10 +123,9 @@ export function Topup() {
             </>
           }
         />
-        <Typography>
-          TODO: display max balance of current token here.
-        </Typography>
-
+        <Box sx={{ display: "flex", justifyContent: "flex-start" }}>
+          <MaxButton />
+        </Box>
         <Suspense fallback={<CircularProgress variant="solid" />}>
           <StoringCostEstimator />
         </Suspense>
@@ -142,6 +141,47 @@ export function Topup() {
         </Box>
       </form>
     </Box>
+  );
+}
+
+function MaxButton() {
+  return (
+    <Suspense fallback={<CircularProgress />}>
+      <LoadableMaxButton />
+    </Suspense>
+  );
+}
+
+function LoadableMaxButton() {
+  const [, setTopupAmount] = useAtom(topupAmountAtom);
+  const [topupTag] = useAtom(topupTagAtom);
+
+  const [balances] = useAtom(balancesAtom);
+  const max = () => {
+    if (!topupTag) {
+      return BigNumber(0);
+    }
+
+    const item = balances.filter((b) => b.tag === topupTag);
+    if (item.length < 1) {
+      return BigNumber(0);
+    }
+
+    return BigNumber(item[0].balance);
+  };
+  return (
+    <Button
+      sx={{
+        paddingLeft: "0",
+        paddingTop: "0",
+      }}
+      variant="plain"
+      onClick={() => {
+        setTopupAmount(max());
+      }}
+    >
+      最大：{max().toString()}
+    </Button>
   );
 }
 
@@ -230,12 +270,19 @@ function TokenList() {
   const list = useMemo(() => {
     return sortedBalances.map((i) => {
       return (
-        <Option key={i.tag} value={i.tag}>
+        <Option label={i.symbol} key={i.tag} value={i.tag}>
           <Box component="span" sx={tokenSymbolBoxStyle}>
             <Typography component="span" sx={tokenBalanceTypoStyle}>
               {i.symbol}
             </Typography>
-            {i.balance}
+            <Typography
+              component="span"
+              sx={(theme) => ({
+                marginLeft: theme.spacing(2),
+              })}
+            >
+              {i.balance}
+            </Typography>
           </Box>
         </Option>
       );
@@ -252,7 +299,12 @@ function TokenList() {
 
   return (
     <Select
-      sx={{ border: "none", mr: -1.5, "&:hover": { bgcolor: "transparent" } }}
+      sx={(theme) => ({
+        border: "none",
+        mr: -1.5,
+        "&:hover": { bgcolor: "transparent" },
+        minWidth: theme.spacing(12),
+      })}
       value={topupTag}
       placeholder="Choose one Token to topup"
       onChange={handleSelectToken}
