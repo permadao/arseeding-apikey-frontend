@@ -1,4 +1,4 @@
-import { Suspense, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import {
   apikeyAtom,
   apikeyStatusAtom,
@@ -18,6 +18,8 @@ import { Container } from "@mui/joy";
 export function ApikeyStatus() {
   const [apikeyStatus] = useAtom(apikeyStatusAtom);
   const [apikey] = useAtom(apikeyAtom);
+
+  useEffect(() => console.error(apikeyStatus), [apikeyStatus]);
 
   if ("error" in apikeyStatus) {
     return (
@@ -40,7 +42,7 @@ export function ApikeyStatus() {
         })}
       >
         <Typography level="h4" sx={{ mb: 0.5 }}>
-          Apikey Status:
+          Apikey 状态
         </Typography>
         <Typography level="body2">
           apikey: {apikey ?? "***************"}
@@ -87,7 +89,7 @@ function GetApikeyButton() {
       color={isDanger ? "danger" : "primary"}
       onClick={handleGetApikey}
     >
-      get apikey
+      查看 Apikey
     </Button>
   );
 }

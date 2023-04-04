@@ -47,7 +47,10 @@ function ConnectedView() {
       <Suspense fallback={<CircularProgress variant="solid" />}>
         <ApikeyStatus />
       </Suspense>
-      <Container sx={{ marginTop: "16px" }} maxWidth="lg">
+      <Container
+        sx={(theme) => ({ marginTop: theme.spacing(2) })}
+        maxWidth="lg"
+      >
         <Box display="grid" gridTemplateColumns="repeat(12, 1fr)" gap={2}>
           <Start />
           <End />

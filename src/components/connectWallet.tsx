@@ -15,7 +15,7 @@ export function UnconnectView() {
   const [errorMessage] = useAtom(errorMessageAtom);
   return (
     <Container
-      maxWidth="sm"
+      maxWidth="xs"
       sx={(theme) => ({
         height: "100%",
         width: "100%",
@@ -26,7 +26,7 @@ export function UnconnectView() {
     >
       <Container
         sx={(theme) => ({
-          marginTop: 20,
+          marginTop: theme.spacing(2),
           background: theme.palette.background.paper,
           height: "509px",
           display: "flex",
