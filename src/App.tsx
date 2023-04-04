@@ -23,7 +23,7 @@ function App() {
       display="grid"
       sx={{
         gridTemplateRows: "min-content 1fr min-content",
-        height: "100%",
+        minHeight: "100vh",
         background: "linear-gradient(90deg, #F3FFFC 0%, #FAF4FC 92.08%)",
       }}
     >

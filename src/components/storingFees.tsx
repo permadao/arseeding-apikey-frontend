@@ -80,7 +80,7 @@ function Estimator() {
     <Box
       display="grid"
       sx={(theme) => ({
-        gap: theme.spacing(2),
+        gap: theme.spacing(1),
       })}
       gridTemplateColumns="repeat(12, 1fr)"
     >
@@ -191,14 +191,14 @@ function Item({
   return (
     <Box
       onClick={handleClickBtn}
-      sx={{
+      sx={(theme) => ({
         cursor: "pointer",
         display: "grid",
         placeContent: "center",
         placeItems: "center",
-        p: 2,
-        border: "1px solid grey",
-      }}
+        padding: theme.spacing(1),
+        border: "1px solid #dfdfdf",
+      })}
       gridColumn={{ xs: "span 12", sm: "span 6", md: "span 6", lg: "span 6" }}
     >
       <Typography>{formatBytes(bytes * scale)}</Typography>
