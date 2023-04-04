@@ -226,7 +226,7 @@ function TopupButton() {
 
   const isSufficinent = useMemo(() => {
     const t = balances.filter((b) => b.tag === topupTag);
-    return t.length === 1 && BigNumber(t[0].balance).gt(topupAmount);
+    return t.length === 1 && BigNumber(t[0].balance).gte(topupAmount);
   }, [balances, topupTag, topupAmount]);
 
   const isDanger = useMemo(() => {
