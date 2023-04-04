@@ -223,4 +223,20 @@ export const connectWalletFnAtom = atom(async (get) => {
     (await provider.send("eth_requestAccounts", [])) as string[];
 });
 
+export type ConnectWalletFnType = {
+  provider: ethers.providers.Web3Provider;
+};
+export const connectWalletFnV2Atom = atom(
+  null,
+  async (get, _set, value: ConnectWalletFnType) => {
+    const provider = value.provider;
+    const accounts = (await provider.send(
+      "eth_requestAccounts",
+      []
+    )) as string[];
+
+    return accounts;
+  }
+);
+
 export const loadableConnectWalletFnAtom = loadable(connectWalletFnAtom);

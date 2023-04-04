@@ -1,28 +1,17 @@
-import { useAtom } from "jotai";
-import { accountAtom, loadableConnectWalletFnAtom } from "../states";
+import { atom, useAtom } from "jotai";
+import { accountAtom, connectWalletFnV2Atom, providerAtom } from "../states";
 import Button from "@mui/joy/Button";
-import { useState } from "react";
+import { Suspense } from "react";
 import Box from "@mui/material/Box";
 import Alert from "@mui/joy/Alert";
 import Typography from "@mui/joy/Typography";
 import WarningIcon from "@mui/icons-material/Warning";
+import { CircularProgress } from "@mui/joy";
 
-export function ConnectWallet() {
-  const [, setAccount] = useAtom(accountAtom);
-  const [connectWalletFn] = useAtom(loadableConnectWalletFnAtom);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+const errorMessageAtom = atom<string | null>(null);
 
-  const handleGetAccounts = async () => {
-    if (connectWalletFn.state === "hasData") {
-      const accounts = await connectWalletFn.data();
-      setAccount(accounts[0]);
-    }
-    if (connectWalletFn.state === "hasError") {
-      const error = connectWalletFn.error as Error;
-      console.error({ error });
-      setErrorMessage(error.message ?? (error as object).toString());
-    }
-  };
+export function UnconnectView() {
+  const [errorMessage] = useAtom(errorMessageAtom);
   return (
     <Box>
       {errorMessage && (
@@ -37,12 +26,32 @@ export function ConnectWallet() {
           </div>
         </Alert>
       )}
-      <Button
-        loading={connectWalletFn.state === "loading"}
-        onClick={handleGetAccounts}
-      >
-        CONNECT WALLET
-      </Button>
+      <Suspense fallback={<CircularProgress variant="solid" />}>
+        <ConnectWalletBtn />
+      </Suspense>
     </Box>
   );
+}
+
+function ConnectWalletBtn() {
+  const [, setAccount] = useAtom(accountAtom);
+  const [, setErrorMessage] = useAtom(errorMessageAtom);
+
+  const [provider] = useAtom(providerAtom);
+  const [, connectWalletFnV2] = useAtom(connectWalletFnV2Atom);
+  const handleGetAccounts = async () => {
+    try {
+      const accounts = await connectWalletFnV2({ provider });
+      if (accounts.length < 1) {
+        throw new Error("accounts length can not less than 1.");
+      }
+      setAccount(accounts[0]);
+    } catch (e) {
+      const error = e as unknown as Error;
+      console.error({ error });
+      setErrorMessage(error.message ?? (error as object).toString());
+    }
+  };
+
+  return <Button onClick={handleGetAccounts}>CONNECT WALLET</Button>;
 }

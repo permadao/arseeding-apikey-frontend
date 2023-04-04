@@ -12,7 +12,7 @@ import {
   Topup,
 } from "./components";
 import CircularProgress from "@mui/joy/CircularProgress";
-import { ConnectWallet } from "./components/connectWallet";
+import { UnconnectView } from "./components/connectWallet";
 import { MyAppBar } from "./components/appBar";
 
 function App() {
@@ -28,7 +28,7 @@ function App() {
     >
       <MyAppBar />
       <Container maxWidth="sm">
-        {account ? <ConnectedView /> : <ConnectWallet />}
+        {account ? <ConnectedView /> : <UnconnectView />}
       </Container>
       <Container maxWidth="lg">
         <Suspense fallback={<CircularProgress variant="solid" />}>
