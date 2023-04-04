@@ -1,6 +1,9 @@
 import { atom } from "jotai";
 import BigNumber from "bignumber.js";
 
+// 1GB
+export const storingCostEstimateSizeBaseAtom = atom<number>(1073741824);
+
 export const topupStoringSizeAtom = atom<number>(1073741824);
 export const topupTokenSymbolAtom = atom<string | null>(null);
 export const topupTagAtom = atom<string | null>(null);

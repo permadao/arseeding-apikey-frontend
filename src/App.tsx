@@ -65,7 +65,7 @@ function Start() {
         background: theme.palette.background.paper,
         borderRadius: theme.shape.borderRadius,
       })}
-      gridColumn={{ xs: "span 12", lg: "span 6" }}
+      gridColumn={{ xs: "span 12", md: "span 6", lg: "span 6" }}
     >
       <Typography level="h4">充值</Typography>
       <Suspense fallback={<CircularProgress variant="solid" />}>
@@ -83,7 +83,7 @@ function End() {
         background: theme.palette.background.paper,
         borderRadius: theme.shape.borderRadius,
       })}
-      gridColumn={{ xs: "span 12", lg: "span 6" }}
+      gridColumn={{ xs: "span 12", md: "span 6", lg: "span 6" }}
     >
       grid container 2
     </Box>

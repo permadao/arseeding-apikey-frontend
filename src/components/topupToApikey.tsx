@@ -169,18 +169,31 @@ function LoadableMaxButton() {
 
     return BigNumber(item[0].balance);
   };
+  const symbol = () => {
+    if (!topupTag) {
+      return "";
+    }
+    const item = balances.filter((b) => b.tag === topupTag);
+    if (item.length < 1) {
+      return "";
+    }
+
+    return item[0].symbol;
+  };
   return (
     <Button
-      sx={{
+      sx={(theme) => ({
+        color: theme.palette.text.secondary,
         paddingLeft: "0",
         paddingTop: "0",
-      }}
+      })}
       variant="plain"
       onClick={() => {
         setTopupAmount(max());
       }}
     >
       最大：{max().toString()}
+      {symbol()}
     </Button>
   );
 }

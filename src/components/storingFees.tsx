@@ -1,10 +1,11 @@
 import { useAtom } from "jotai";
 import {
+  loadableExtractCostInUSDAtom,
   loadableFetchStoringFeeAtom,
+  tokensInfoAtom,
   topupAmountAtom,
   topupStoringSizeAtom,
 } from "../states";
-import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import Typography from "@mui/joy/Typography";
 import Skeleton from "@mui/material/Skeleton";
@@ -15,6 +16,7 @@ import IconButton from "@mui/joy/IconButton";
 import * as ethers from "ethers";
 import { formatUnits, formatBytes } from "../tools";
 import { Input, Option, Select } from "@mui/joy";
+import { useEffect, useMemo } from "react";
 
 export function StoringCostEstimator() {
   return (
@@ -31,24 +33,39 @@ export function StoringCostEstimator() {
         }}
       >
         <Typography level="body1">费用计算器</Typography>
-        <IconButton variant="plain">
+        <IconButton
+          sx={(theme) => ({
+            color: theme.palette.text.secondary,
+          })}
+          variant="plain"
+        >
           <HelpOutlineIcon />
         </IconButton>
       </Box>
       <Estimator />
-      <Calculator />
+      {/* <Calculator /> */}
     </Box>
   );
 }
 
 function Estimator() {
   const [fetchStoringFee] = useAtom(loadableFetchStoringFeeAtom);
+  const [perGBCostInUSD] = useAtom(loadableExtractCostInUSDAtom);
+  // const [storagingCostInUSDC] = useAtom(loadableFetchStoringCostInUSDCAtom);
+
   const [topupStoringSize] = useAtom(topupStoringSizeAtom);
 
-  if (fetchStoringFee.state === "loading") {
+  if (
+    fetchStoringFee.state === "loading" ||
+    perGBCostInUSD.state === "loading"
+  ) {
     return <Skeleton height={200} />;
   }
-  if (fetchStoringFee.state === "hasError") {
+
+  if (
+    fetchStoringFee.state === "hasError" ||
+    perGBCostInUSD.state === "hasError"
+  ) {
     return <Typography>Storage cost load error.</Typography>;
   }
   if ("error" in fetchStoringFee.data) {
@@ -60,10 +77,17 @@ function Estimator() {
   }
 
   return (
-    <Box display="grid" gridTemplateColumns="repeat(12, 1fr)">
+    <Box
+      display="grid"
+      sx={(theme) => ({
+        gap: theme.spacing(2),
+      })}
+      gridTemplateColumns="repeat(12, 1fr)"
+    >
       <Item
         bytes={topupStoringSize}
         fee={fetchStoringFee.data.finalFee}
+        perGBCostInUSD={perGBCostInUSD.data}
         scale={1}
         decimals={fetchStoringFee.data.decimals}
         symbol={fetchStoringFee.data.currency}
@@ -71,6 +95,7 @@ function Estimator() {
       <Item
         bytes={topupStoringSize}
         fee={fetchStoringFee.data.finalFee}
+        perGBCostInUSD={perGBCostInUSD.data}
         scale={2}
         decimals={fetchStoringFee.data.decimals}
         symbol={fetchStoringFee.data.currency}
@@ -78,6 +103,7 @@ function Estimator() {
       <Item
         bytes={topupStoringSize}
         fee={fetchStoringFee.data.finalFee}
+        perGBCostInUSD={perGBCostInUSD.data}
         scale={5}
         decimals={fetchStoringFee.data.decimals}
         symbol={fetchStoringFee.data.currency}
@@ -85,6 +111,7 @@ function Estimator() {
       <Item
         bytes={topupStoringSize}
         fee={fetchStoringFee.data.finalFee}
+        perGBCostInUSD={perGBCostInUSD.data}
         scale={10}
         decimals={fetchStoringFee.data.decimals}
         symbol={fetchStoringFee.data.currency}
@@ -101,6 +128,9 @@ function Calculator() {
       })}
     >
       <Input
+        sx={{
+          paddingRight: 0,
+        }}
         endDecorator={
           <Select>
             <Option>KB</Option>
@@ -109,25 +139,48 @@ function Calculator() {
           </Select>
         }
       />
-      <Input />
+      <TokensSelector />
     </Box>
+  );
+}
+
+function TokensSelector() {
+  const [tokensInfo] = useAtom(tokensInfoAtom);
+  const tokenList = useMemo(() => {
+    return tokensInfo.tokenList.map((l) => (
+      <Option label={l.symbol} key={l.tag}>
+        {l.symbol}
+      </Option>
+    ));
+  }, [tokensInfo]);
+
+  return (
+    <Input
+      sx={{
+        paddingRight: 0,
+      }}
+      endDecorator={<Select>{tokenList}</Select>}
+    />
   );
 }
 
 function Item({
   bytes,
   fee,
+  perGBCostInUSD,
   decimals,
   scale,
   symbol,
 }: {
   bytes: number;
   fee: string;
+  perGBCostInUSD: string;
   decimals: string | number;
   scale: number;
   symbol: string;
 }) {
   const [, setTopupAmount] = useAtom(topupAmountAtom);
+  const costInUSD = BigNumber(perGBCostInUSD).multipliedBy(scale);
   const feeNum = ethers.BigNumber.from(fee);
   const feeNumScaled = ethers.BigNumber.from(scale).mul(feeNum);
   const feeNumScaledText = formatUnits(feeNumScaled, decimals, 4);
@@ -140,17 +193,21 @@ function Item({
       onClick={handleClickBtn}
       sx={{
         cursor: "pointer",
-        display: "inline-block",
+        display: "grid",
+        placeContent: "center",
+        placeItems: "center",
         p: 2,
         border: "1px solid grey",
       }}
-      gridColumn={{ xs: "span 12", lg: "span 6" }}
+      gridColumn={{ xs: "span 12", sm: "span 6", md: "span 6", lg: "span 6" }}
     >
       <Typography>{formatBytes(bytes * scale)}</Typography>
       <Typography>
         {feeNumScaledText}
         {symbol}
       </Typography>
+
+      <Typography> ${costInUSD.toString()}</Typography>
     </Box>
   );
 }

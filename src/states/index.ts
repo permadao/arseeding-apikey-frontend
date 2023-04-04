@@ -24,6 +24,7 @@ import {
   accountAtom,
   topupTokenSymbolAtom,
   topupStoringSizeAtom,
+  storingCostEstimateSizeBaseAtom,
 } from "./primitiveAtoms";
 import { OrderKey } from "../types";
 import {
@@ -32,6 +33,7 @@ import {
   getApikey,
   getStoringFee,
 } from "../api";
+import BigNumber from "bignumber.js";
 export * from "./primitiveAtoms";
 
 // get bundler address here:
@@ -58,12 +60,34 @@ export const [fetchStoringFeeAtom] = atomsWithQuery((get) => {
   return {
     queryKey: [STORING_FEE_KEY, currencySymbol, storingSize],
     queryFn: getStoringFee,
-    refetchInterval: 2000,
+    refetchInterval: 5000,
     retry: true,
     retryDelay: 2000,
   };
 });
 export const loadableFetchStoringFeeAtom = loadable(fetchStoringFeeAtom);
+// hack: estimate storing cost in usd (actually we fetch the storing cost of USDC)...
+export const [fetchStoringCostInUSDCAtom] = atomsWithQuery((get) => {
+  const sizeBase = get(storingCostEstimateSizeBaseAtom);
+  return {
+    queryKey: [STORING_FEE_KEY, "USDC", sizeBase],
+    queryFn: getStoringFee,
+    refetchInterval: 5000,
+    retry: true,
+    retryDelay: 2000,
+  };
+});
+export const extractCostInUSDAtom = atom(async (get) => {
+  const fecther = await get(fetchStoringCostInUSDCAtom);
+  if ("error" in fecther) {
+    return "NaN";
+  }
+  return ethers.utils.formatUnits(fecther.finalFee, fecther.decimals);
+});
+export const loadableFetchStoringCostInUSDCAtom = loadable(
+  fetchStoringCostInUSDCAtom
+);
+export const loadableExtractCostInUSDAtom = loadable(extractCostInUSDAtom);
 
 export const metamaskProviderAtom = atom(
   async () => {
