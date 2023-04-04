@@ -3,6 +3,7 @@ import { accountAtom, connectWalletFnV2Atom, providerAtom } from "../states";
 import Button from "@mui/joy/Button";
 import { Suspense } from "react";
 import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
 import Alert from "@mui/joy/Alert";
 import Typography from "@mui/joy/Typography";
 import WarningIcon from "@mui/icons-material/Warning";
@@ -13,23 +14,48 @@ const errorMessageAtom = atom<string | null>(null);
 export function UnconnectView() {
   const [errorMessage] = useAtom(errorMessageAtom);
   return (
-    <Box>
-      {errorMessage && (
-        <Alert startDecorator={<WarningIcon />} color="danger" variant="soft">
-          <div>
-            <Typography fontWeight="lg" mt={0.25}>
-              Error
-            </Typography>
-            <Typography fontSize="sm" sx={{ opacity: 0.8 }}>
-              {errorMessage}
-            </Typography>
-          </div>
-        </Alert>
-      )}
-      <Suspense fallback={<CircularProgress variant="solid" />}>
-        <ConnectWalletBtn />
-      </Suspense>
-    </Box>
+    <Container
+      maxWidth="sm"
+      sx={(theme) => ({
+        height: "100%",
+        width: "100%",
+        display: "flex",
+        justifyContent: "center",
+        alignItem: "center",
+      })}
+    >
+      <Container
+        sx={(theme) => ({
+          marginTop: 20,
+          background: theme.palette.background.paper,
+          height: "509px",
+          display: "flex",
+          justifyContent: "center",
+          alignItem: "center",
+          flexDirection: "column",
+          padding: theme.spacing(4),
+          gap: theme.spacing(3),
+          boxShadow: theme.shadows[1],
+          borderRadius: theme.shape.borderRadius,
+        })}
+      >
+        {errorMessage && (
+          <Alert startDecorator={<WarningIcon />} color="danger" variant="soft">
+            <div>
+              <Typography fontWeight="lg" mt={0.25}>
+                Error
+              </Typography>
+              <Typography fontSize="sm" sx={{ opacity: 0.8 }}>
+                {errorMessage}
+              </Typography>
+            </div>
+          </Alert>
+        )}
+        <Suspense fallback={<CircularProgress variant="solid" />}>
+          <ConnectWalletBtn />
+        </Suspense>
+      </Container>
+    </Container>
   );
 }
 

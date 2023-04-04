@@ -10,7 +10,13 @@ import { CircularProgress } from "@mui/joy";
 
 export function MyAppBar() {
   return (
-    <AppBar position="sticky" elevation={0}>
+    <AppBar
+      position="sticky"
+      elevation={0}
+      sx={{
+        background: "transparent",
+      }}
+    >
       <Container maxWidth="lg">
         <Toolbar disableGutters>
           <Box sx={{ flexGrow: 1 }}>
@@ -22,7 +28,7 @@ export function MyAppBar() {
                 mr: 2,
                 display: { xs: "none", md: "flex" },
                 fontWeight: 700,
-                color: "#fff",
+                color: "#000",
                 textDecoration: "none",
               }}
             >
@@ -37,7 +43,7 @@ export function MyAppBar() {
                 display: { xs: "flex", md: "none" },
                 flexGrow: 1,
                 fontWeight: 700,
-                color: "#fff",
+                color: "#000",
                 textDecoration: "none",
               }}
             >

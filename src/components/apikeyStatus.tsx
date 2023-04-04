@@ -13,19 +13,11 @@ import { atom, useAtom } from "jotai";
 import Box from "@mui/material/Box";
 import { formatBytes } from "../tools";
 import { loadable } from "jotai/utils";
-
-const cardStyle = () => ({
-  transition: "transform 0.3s, border 0.3s, box-shadow 0.2s",
-  "&:hover": {
-    boxShadow: "md",
-    transform: "translateY(-2px)",
-    borderColor: "neutral.outlinedHoverBorder",
-  },
-});
+import { Container } from "@mui/joy";
 
 export function ApikeyStatus() {
   const [apikeyStatus] = useAtom(apikeyStatusAtom);
-  const [apikey, setApikey] = useAtom(apikeyAtom);
+  const [apikey] = useAtom(apikeyAtom);
 
   if ("error" in apikeyStatus) {
     return (
@@ -37,8 +29,16 @@ export function ApikeyStatus() {
   }
 
   return (
-    <Box>
-      <Card sx={cardStyle}>
+    <Container maxWidth="lg">
+      <Box
+        sx={(theme) => ({
+          marginTop: 5,
+          background: theme.palette.background.paper,
+          padding: theme.spacing(3),
+          boxShadow: theme.shadows[1],
+          borderRadius: theme.shape.borderRadius,
+        })}
+      >
         <Typography level="h4" sx={{ mb: 0.5 }}>
           Apikey Status:
         </Typography>
@@ -55,8 +55,8 @@ export function ApikeyStatus() {
         <Suspense fallback="loading get apikey button">
           <GetApikeyButton />
         </Suspense>
-      </Card>
-    </Box>
+      </Box>
+    </Container>
   );
 }
 

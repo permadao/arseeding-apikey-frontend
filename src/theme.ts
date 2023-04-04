@@ -30,7 +30,7 @@ import {
   ZIndex,
   ThemeVars,
 } from "@mui/material/styles";
-import { blue, grey } from "@mui/material/colors";
+import { common, grey } from "@mui/material/colors";
 import { extendTheme as extendJoyTheme } from "@mui/joy/styles";
 
 import type {} from "@mui/material/themeCssVarsAugmentation";
@@ -101,6 +101,47 @@ declare module "@mui/material/SvgIcon" {
 }
 
 const muiTheme = extendMuiTheme({
+  cssVarPrefix: "mui",
+  spacing: 8,
+  shape: {
+    borderRadius: 12,
+  },
+  shadows: [
+    "none",
+    "0px 10px 30px rgba(0, 0, 0, 0.03)",
+    "0px 10px 30px rgba(0, 0, 0, 0.03)",
+    "0px 10px 30px rgba(0, 0, 0, 0.03)",
+    "0px 10px 30px rgba(0, 0, 0, 0.03)",
+    "0px 10px 30px rgba(0, 0, 0, 0.03)",
+    "0px 10px 30px rgba(0, 0, 0, 0.03)",
+    "0px 10px 30px rgba(0, 0, 0, 0.03)",
+    "0px 10px 30px rgba(0, 0, 0, 0.03)",
+    "0px 10px 30px rgba(0, 0, 0, 0.03)",
+    "0px 10px 30px rgba(0, 0, 0, 0.03)",
+    "0px 10px 30px rgba(0, 0, 0, 0.03)",
+    "0px 10px 30px rgba(0, 0, 0, 0.03)",
+    "0px 10px 30px rgba(0, 0, 0, 0.03)",
+    "0px 10px 30px rgba(0, 0, 0, 0.03)",
+    "0px 10px 30px rgba(0, 0, 0, 0.03)",
+    "0px 10px 30px rgba(0, 0, 0, 0.03)",
+    "0px 10px 30px rgba(0, 0, 0, 0.03)",
+    "0px 10px 30px rgba(0, 0, 0, 0.03)",
+    "0px 10px 30px rgba(0, 0, 0, 0.03)",
+    "0px 10px 30px rgba(0, 0, 0, 0.03)",
+    "0px 10px 30px rgba(0, 0, 0, 0.03)",
+    "0px 10px 30px rgba(0, 0, 0, 0.03)",
+    "0px 10px 30px rgba(0, 0, 0, 0.03)",
+    "0px 10px 30px rgba(0, 0, 0, 0.03)",
+  ],
+  colorSchemes: {
+    light: {
+      palette: {
+        primary: {
+          main: "#000",
+        },
+      },
+    },
+  },
   typography: {
     h1: {
       overflowWrap: "anywhere",
@@ -124,7 +165,8 @@ const muiTheme = extendMuiTheme({
 });
 
 const joyTheme = extendJoyTheme({
-  cssVarPrefix: "mui",
+  cssVarPrefix: "joy",
+  spacing: 8,
   typography: {
     display1: {
       overflowWrap: "anywhere",
@@ -158,7 +200,7 @@ const joyTheme = extendJoyTheme({
     light: {
       palette: {
         primary: {
-          ...blue,
+          ...common,
           solidColor: "var(--mui-palette-primary-contrastText)",
           solidBg: "var(--mui-palette-primary-main)",
           solidHoverBg: "var(--mui-palette-primary-dark)",
@@ -186,7 +228,7 @@ const joyTheme = extendJoyTheme({
     dark: {
       palette: {
         primary: {
-          ...blue,
+          ...common,
           solidColor: "var(--mui-palette-primary-contrastText)",
           solidBg: "var(--mui-palette-primary-main)",
           solidHoverBg: "var(--mui-palette-primary-dark)",

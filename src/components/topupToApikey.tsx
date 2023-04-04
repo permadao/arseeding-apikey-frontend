@@ -22,6 +22,9 @@ import Input from "@mui/joy/Input";
 import Option from "@mui/joy/Option";
 import Select from "@mui/joy/Select";
 import BigNumber from "bignumber.js";
+import { StoringCostEstimator } from "./storingFees";
+import { CircularProgress } from "@mui/joy";
+import Divider from "@mui/joy/Divider";
 
 const isTopupButtonLoadingAtom = atom(false);
 
@@ -83,8 +86,11 @@ export function Topup() {
   };
 
   return (
-    <Box>
-      <Typography level="h4">Topup to arseeding</Typography>
+    <Box
+      sx={{
+        marginTop: "10px",
+      }}
+    >
       {hash && (
         <Alert startDecorator={<CheckCircleIcon />} variant="soft">
           <div>
@@ -98,11 +104,6 @@ export function Topup() {
         </Alert>
       )}
 
-      <Typography>selected token's tag: {topupTag}</Typography>
-      <Typography>
-        topup amountd: {topupAmount.toString()}
-        {topupTokenSymbol}
-      </Typography>
       <form onSubmit={testHandleTopup}>
         <Input
           type="number"
@@ -111,13 +112,50 @@ export function Topup() {
           sx={{ mb: 1 }}
           value={topupAmount.toNumber()}
           onChange={handleChangeAmount}
+          endDecorator={
+            <>
+              <Divider orientation="vertical" />
+              <Suspense
+                fallback={<Skeleton variant="rectangular" height={50} />}
+              >
+                <TokenList />
+              </Suspense>
+            </>
+          }
         />
-        <Suspense fallback={<Skeleton variant="rectangular" height={50} />}>
-          <TokenList />
+        <Typography>
+          TODO: display max balance of current token here.
+        </Typography>
+
+        <Suspense fallback={<CircularProgress variant="solid" />}>
+          <StoringCostEstimator />
         </Suspense>
-        <TopupButton />
+        <Box sx={(theme) => ({ gap: theme.spacing(2), display: "flex" })}>
+          <ClearButton />
+          <TopupButton />
+        </Box>
       </form>
     </Box>
+  );
+}
+
+function ClearButton() {
+  const [, setTopupAmount] = useAtom(topupAmountAtom);
+  const [, setTopupTag] = useAtom(topupTagAtom);
+
+  const handleClearUpBtn = () => {
+    setTopupAmount(BigNumber(0));
+    setTopupTag(null);
+  };
+  return (
+    <Button
+      sx={(theme) => ({
+        background: theme.palette.background.tooltip,
+      })}
+      onClick={handleClearUpBtn}
+    >
+      清 除
+    </Button>
   );
 }
 
@@ -153,6 +191,7 @@ function TopupButton() {
 
   return (
     <Button
+      sx={{ flexGrow: 1 }}
       color={isDanger ? "danger" : "primary"}
       disabled={isDanger}
       loading={isLoading}
@@ -207,6 +246,7 @@ function TokenList() {
 
   return (
     <Select
+      sx={{ border: "none", mr: -1.5, "&:hover": { bgcolor: "transparent" } }}
       value={topupTag}
       placeholder="Choose one Token to topup"
       onChange={handleSelectToken}
