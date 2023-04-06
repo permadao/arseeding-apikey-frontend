@@ -75,6 +75,7 @@ export function Topup() {
       }
     );
     setHash(res.everHash);
+    setTimeout(() => setHash(null), 2000);
   };
 
   const handleChangeAmount = (event: React.ChangeEvent<HTMLInputElement>) => {
