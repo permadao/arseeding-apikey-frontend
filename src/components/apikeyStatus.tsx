@@ -15,9 +15,11 @@ import Tooltip from "@mui/joy/Tooltip";
 import { toast } from "react-toastify";
 import { TokenItem } from "../api";
 import { ethers } from "ethers";
+import { useTranslation } from "react-i18next";
 
 export function ApikeyStatus() {
   const [apikeyStatus] = useAtom(apikeyStatusAtom);
+  const { t } = useTranslation();
 
   if ("error" in apikeyStatus) {
     return (
@@ -31,7 +33,9 @@ export function ApikeyStatus() {
         })}
         maxWidth="lg"
       >
-        <Typography>Topup to register current address a apikey.</Typography>
+        <Typography>
+          {t("Topup to register current address a apikey.")}
+        </Typography>
         <Typography>{apikeyStatus.error}</Typography>
       </Container>
     );
@@ -49,14 +53,14 @@ export function ApikeyStatus() {
         })}
       >
         <Typography level="h4" sx={{ mb: 0.5 }}>
-          Apikey 状态
+          {t("Apikey Status")}
         </Typography>
 
         <ApikeyContainer />
 
         <CapText bytes={apikeyStatus.estimateCap} />
         <Typography level="h2" fontSize="sm" sx={{ mb: 0.5 }}>
-          token balances in this apikey:
+          {t("Token balances in this apikey")}
         </Typography>
         <ul>
           <TokenBalanceList tokenBalance={apikeyStatus.tokens} />
@@ -97,6 +101,8 @@ function ApikeyContainer() {
 }
 
 function GetApikeyButton() {
+  const { t } = useTranslation();
+
   const [isDanger, setIsDanger] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [, setApikey] = useAtom(apikeyAtom);
@@ -123,16 +129,23 @@ function GetApikeyButton() {
       color={isDanger ? "danger" : "primary"}
       onClick={handleGetApikey}
     >
-      查看 Apikey
+      {t("View Apikey")}
     </Button>
   );
 }
 
 function CapText({ bytes }: { bytes: string }) {
+  const { t } = useTranslation();
+
   const cap = useMemo(() => {
     return formatBytes(Number(bytes));
   }, [bytes]);
-  return <Typography level="body2">estimate cap: {cap}</Typography>;
+  return (
+    <Typography level="body2">
+      {t("Estimate cap:")}
+      {cap}
+    </Typography>
+  );
 }
 
 function TokenBalanceList({

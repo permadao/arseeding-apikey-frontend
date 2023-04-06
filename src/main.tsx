@@ -10,6 +10,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Provider } from "jotai";
 import { mergedTheme } from "./theme";
 import { ToastContainer } from "react-toastify";
+import "./locales/index";
 
 const queryClient = new QueryClient({
   defaultOptions: {

@@ -8,6 +8,7 @@ import Alert from "@mui/joy/Alert";
 import Typography from "@mui/joy/Typography";
 import WarningIcon from "@mui/icons-material/Warning";
 import { CircularProgress } from "@mui/joy";
+import { useTranslation } from "react-i18next";
 
 const errorMessageAtom = atom<string | null>(null);
 
@@ -60,6 +61,7 @@ export function UnconnectView() {
 }
 
 function ConnectWalletBtn() {
+  const { t } = useTranslation();
   const [, setAccount] = useAtom(accountAtom);
   const [, setErrorMessage] = useAtom(errorMessageAtom);
 
@@ -79,5 +81,5 @@ function ConnectWalletBtn() {
     }
   };
 
-  return <Button onClick={handleGetAccounts}>CONNECT WALLET</Button>;
+  return <Button onClick={handleGetAccounts}>{t("CONNECT WALLET")}</Button>;
 }

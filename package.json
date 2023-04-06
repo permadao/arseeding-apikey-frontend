@@ -23,11 +23,13 @@
     "buffer": "^6.0.3",
     "ethers": "^5.4",
     "everpay": "^0.6.1",
+    "i18next": "^22.4.14",
     "jotai": "^2.0.3",
     "jotai-tanstack-query": "^0.6.0",
     "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-i18next": "^12.2.0",
     "react-toastify": "^9.1.2",
     "true-myth": "^6.2.0",
     "vite-compatible-readable-stream": "^3.6.1"

@@ -14,6 +14,7 @@ import CircularProgress from "@mui/joy/CircularProgress";
 import { UnconnectView } from "./components/connectWallet";
 import { MyAppBar } from "./components/appBar";
 import { Typography } from "@mui/joy";
+import { useTranslation } from "react-i18next";
 
 function App() {
   const [account] = useAtom(accountAtom);
@@ -61,6 +62,7 @@ function ConnectedView() {
 }
 
 function Start() {
+  const { t } = useTranslation();
   return (
     <Box
       sx={(theme) => ({
@@ -70,7 +72,7 @@ function Start() {
       })}
       gridColumn={{ xs: "span 12", md: "span 6", lg: "span 6" }}
     >
-      <Typography level="h4">充值</Typography>
+      <Typography level="h4">{t("Top up")}</Typography>
       <Suspense fallback={<CircularProgress variant="solid" />}>
         <Topup />
       </Suspense>

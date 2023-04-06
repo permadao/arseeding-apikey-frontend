@@ -2,8 +2,10 @@ import { useAtom } from "jotai";
 import { accountAtom, metamaskProviderAtom } from "../states";
 import Button from "@mui/joy/Button";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 export function AccountState() {
+  const { t } = useTranslation();
   const [metamaskProvider] = useAtom(metamaskProviderAtom);
   const [account, setAccount] = useAtom(accountAtom);
 
@@ -23,8 +25,14 @@ export function AccountState() {
     // setMetamaskProviderAtom("hahaha");
   };
   return (
-    <Button loading={typeof account !== "string"} onClick={handleClick}>
-      Wallet Connected
+    <Button
+      loading={typeof account !== "string"}
+      onClick={handleClick}
+      sx={(theme) => ({
+        marginLeft: theme.spacing(2),
+      })}
+    >
+      {t("Wallet Connected")}
     </Button>
   );
 }

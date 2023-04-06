@@ -25,10 +25,12 @@ import BigNumber from "bignumber.js";
 import { StoringCostEstimator } from "./storingCosts";
 import { CircularProgress } from "@mui/joy";
 import Divider from "@mui/joy/Divider";
+import { useTranslation } from "react-i18next";
 
 const isTopupButtonLoadingAtom = atom(false);
 
 export function Topup() {
+  const { t } = useTranslation();
   const [topupTag] = useAtom(topupTagAtom);
   const [topupAmount, setTopupAmount] = useAtom(topupAmountAtom);
   const [, topupApikeyFn] = useAtom(topupApikeyAtom);
@@ -54,13 +56,13 @@ export function Topup() {
         pending: {
           render() {
             setIsTopupButtonLoading(true);
-            return "pending transaction";
+            return t("pending transaction");
           },
         },
         success: {
           render() {
             setIsTopupButtonLoading(false);
-            return "transaction has been minted";
+            return t("transaction has been minted");
           },
         },
         error: {
@@ -153,6 +155,8 @@ function MaxButton() {
 }
 
 function LoadableMaxButton() {
+  const { t } = useTranslation();
+
   const [, setTopupAmount] = useAtom(topupAmountAtom);
   const [topupTag] = useAtom(topupTagAtom);
 
@@ -192,13 +196,15 @@ function LoadableMaxButton() {
         setTopupAmount(max());
       }}
     >
-      最大：{max().toString()}
+      {t("Max")}：{max().toString()}
       {symbol()}
     </Button>
   );
 }
 
 function ClearButton() {
+  const { t } = useTranslation();
+
   const [, setTopupAmount] = useAtom(topupAmountAtom);
   const [, setTopupTag] = useAtom(topupTagAtom);
 
@@ -213,12 +219,13 @@ function ClearButton() {
       })}
       onClick={handleClearUpBtn}
     >
-      清 除
+      {t("Clear")}
     </Button>
   );
 }
 
 function TopupButton() {
+  const { t } = useTranslation();
   const [topupTag] = useAtom(topupTagAtom);
   const [balances] = useAtom(balancesAtom);
   const [topupAmount] = useAtom(topupAmountAtom);
@@ -235,17 +242,17 @@ function TopupButton() {
 
   const btnText = () => {
     if (topupAmount.isZero()) {
-      return "Invalid topup amount";
+      return t("Invalid Topup Amount");
     }
     if (!topupTag) {
-      return "Invalid topup token";
+      return t("Invalid Topup Token");
     }
 
     if (!isSufficinent) {
-      return "Insufficinent balance";
+      return t("Insufficinent balance");
     }
 
-    return "TOPUP";
+    return t("TOPUP");
   };
 
   return (

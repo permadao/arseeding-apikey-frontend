@@ -16,9 +16,12 @@ import IconButton from "@mui/joy/IconButton";
 import * as ethers from "ethers";
 import { formatUnits, formatBytes } from "../tools";
 import { Input, Option, Select } from "@mui/joy";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 
 export function StoringCostEstimator() {
+  const { t } = useTranslation();
+
   return (
     <Box
       sx={(theme) => ({
@@ -32,7 +35,7 @@ export function StoringCostEstimator() {
           alignItems: "center",
         }}
       >
-        <Typography level="body1">费用计算器</Typography>
+        <Typography level="body1">{t("Storage cost estimator")}</Typography>
         <IconButton
           sx={(theme) => ({
             color: theme.palette.text.secondary,
@@ -179,6 +182,8 @@ function Item({
   scale: number;
   symbol: string;
 }) {
+  const { t } = useTranslation();
+
   const [, setTopupAmount] = useAtom(topupAmountAtom);
   const costInUSD = BigNumber(perGBCostInUSD).multipliedBy(scale);
   const feeNum = ethers.BigNumber.from(fee);
@@ -201,7 +206,9 @@ function Item({
       })}
       gridColumn={{ xs: "span 12", sm: "span 6", md: "span 6", lg: "span 6" }}
     >
-      <Typography>{formatBytes(bytes * scale)}</Typography>
+      <Typography>
+        {t("Per")} {formatBytes(bytes * scale)}
+      </Typography>
       <Typography>
         {feeNumScaledText}
         {symbol}
