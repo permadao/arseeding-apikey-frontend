@@ -31,6 +31,7 @@ i18n
           "transaction has been minted": "transaction has been minted",
           English: "English",
           简体中文: "简体中文",
+          copied: "copied",
         },
       },
       zh: {
@@ -55,6 +56,7 @@ i18n
           "pending transaction": "交易提交中",
           English: "English",
           简体中文: "简体中文",
+          copied: "已复制",
         },
       },
     },

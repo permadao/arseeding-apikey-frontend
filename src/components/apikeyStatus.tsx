@@ -80,6 +80,7 @@ export function ApikeyStatus() {
 }
 
 function ApikeyContainer() {
+  const { t } = useTranslation();
   const [apikey] = useAtom(apikeyAtom);
 
   if (!apikey) {
@@ -93,7 +94,7 @@ function ApikeyContainer() {
   }
   const handleCopy = async () => {
     window.navigator.clipboard.writeText(apikey);
-    toast("copied");
+    toast(t("copied"));
   };
   return (
     <ListItemButton onClick={handleCopy}>
