@@ -16,6 +16,15 @@ import { toast } from "react-toastify";
 import { TokenItem } from "../api";
 import { ethers } from "ethers";
 import { useTranslation } from "react-i18next";
+import List from "@mui/material/List";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItem from "@mui/material/ListItem";
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import Collapse from "@mui/material/Collapse";
+import KeyIcon from "@mui/icons-material/Key";
 
 export function ApikeyStatus() {
   const [apikeyStatus] = useAtom(apikeyStatusAtom);
@@ -56,15 +65,12 @@ export function ApikeyStatus() {
           {t("Apikey Status")}
         </Typography>
 
-        <ApikeyContainer />
+        <List component="div" disablePadding>
+          <ApikeyContainer />
+          <CapText bytes={apikeyStatus.estimateCap} />
+          <TokenBalanceView tokenBalance={apikeyStatus.tokens} />
+        </List>
 
-        <CapText bytes={apikeyStatus.estimateCap} />
-        <Typography level="h2" fontSize="sm" sx={{ mb: 0.5 }}>
-          {t("Token balances in this apikey")}
-        </Typography>
-        <ul>
-          <TokenBalanceList tokenBalance={apikeyStatus.tokens} />
-        </ul>
         <Suspense fallback="loading get apikey button">
           <GetApikeyButton />
         </Suspense>
@@ -77,26 +83,22 @@ function ApikeyContainer() {
   const [apikey] = useAtom(apikeyAtom);
 
   if (!apikey) {
-    return <Typography level="body2">apikey: ***************</Typography>;
+    return (
+      <ListItem>
+        <ListItemText
+          primary={<Typography>apikey: ***************</Typography>}
+        />
+      </ListItem>
+    );
   }
   const handleCopy = async () => {
     window.navigator.clipboard.writeText(apikey);
     toast("copied");
   };
   return (
-    <Tooltip title="click to copy">
-      <Typography
-        onClick={handleCopy}
-        level="body2"
-        sx={(theme) => ({
-          ":hover": {
-            background: "#eee",
-          },
-        })}
-      >
-        apikey: {apikey}
-      </Typography>
-    </Tooltip>
+    <ListItemButton onClick={handleCopy}>
+      <ListItemText primary={<Typography>apikey: {apikey}</Typography>} />
+    </ListItemButton>
   );
 }
 
@@ -141,33 +143,69 @@ function CapText({ bytes }: { bytes: string }) {
     return formatBytes(Number(bytes));
   }, [bytes]);
   return (
-    <Typography level="body2">
-      {t("Estimate cap:")}
-      {cap}
-    </Typography>
+    <ListItem>
+      <ListItemText
+        primary={
+          <Typography>
+            {t("Estimate cap:")}
+            {cap}
+          </Typography>
+        }
+      />
+    </ListItem>
   );
 }
 
-function TokenBalanceList({
+function TokenBalanceView({
   tokenBalance,
 }: {
   tokenBalance: {
     [tokenTag: string]: TokenItem;
   };
 }) {
+  const { t } = useTranslation();
+  const [isExpand, setExpand] = useState(false);
+
   const balancesItem = useMemo(
     () =>
       Object.keys(tokenBalance).map((o) => {
         const { symbol, balance, decimals } = tokenBalance[o];
         const balanceText = ethers.utils.formatUnits(balance, decimals);
         return (
-          <li key={o}>
-            {symbol}: {balanceText}
-          </li>
+          <ListItem key={o}>
+            <ListItemText
+              primary={
+                <Box sx={{ display: "flex" }}>
+                  <Typography sx={{ flexGrow: 1 }}>{symbol}:</Typography>
+                  <Typography>{balanceText}</Typography>
+                </Box>
+              }
+            />
+          </ListItem>
         );
       }),
     [tokenBalance]
   );
+  const handleExpand = () => {
+    setExpand(!isExpand);
+  };
 
-  return <>{balancesItem}</>;
+  return (
+    <>
+      <ListItemButton onClick={handleExpand}>
+        <ListItemText
+          primary={
+            <Typography>{t("Token balances in this apikey")}</Typography>
+          }
+        />
+        {isExpand ? <ExpandLess /> : <ExpandMore />}
+      </ListItemButton>
+
+      <Collapse in={isExpand} unmountOnExit>
+        <List component="div" disablePadding>
+          {balancesItem}
+        </List>
+      </Collapse>
+    </>
+  );
 }
