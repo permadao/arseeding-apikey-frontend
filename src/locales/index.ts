@@ -39,7 +39,7 @@ i18n
           "CONNECT WALLET": "连接钱包",
           "Wallet Connected": "钱包已连接",
           "View Apikey": "查看 Apikey",
-          "Estimate cap：": "预估可用容量：",
+          "Estimate cap:": "预估可用容量：",
           "Token balances in this apikey": "当前 apikey 中的代币余额",
           "Storage cost estimator": "费用计算器",
           Max: "最大",
