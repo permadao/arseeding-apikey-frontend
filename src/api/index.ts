@@ -47,7 +47,6 @@ export async function fetchApikeyStatusFn({
     `https://arseed.web3infura.io/apikey_info/${address}`
   );
   const data = (await res.json()) as ApikeyStatusType;
-  console.error({ data });
   return data;
 }
 

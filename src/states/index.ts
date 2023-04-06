@@ -89,25 +89,17 @@ export const loadableFetchStoringCostInUSDCAtom = loadable(
 );
 export const loadableExtractCostInUSDAtom = loadable(extractCostInUSDAtom);
 
-export const metamaskProviderAtom = atom(
-  async () => {
-    // MOCK delay
-    await sleep(1000);
-    const p: providers.ExternalProvider | null = await detectEthereumProvider({
-      mustBeMetaMask: false,
-    });
-    if (!p) {
-      throw new CannotFindMetamaskWalletError("can not find metamask wallet");
-    }
-    return p;
+export const metamaskProviderAtom = atom(async () => {
+  // MOCK delay
+  await sleep(1000);
+  const p: providers.ExternalProvider | null = await detectEthereumProvider({
+    mustBeMetaMask: false,
+  });
+  if (!p) {
+    throw new CannotFindMetamaskWalletError("can not find metamask wallet");
   }
-  // (get, set, newValue) => {
-  //   console.error({
-  //     m: "set metamask provider atom",
-  //     newValue,
-  //   });
-  // }
-);
+  return p;
+});
 
 export const providerAtom = atom(async (get) => {
   const metamaskProvider = await get(metamaskProviderAtom);
