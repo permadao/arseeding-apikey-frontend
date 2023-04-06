@@ -13,6 +13,8 @@ import { formatBytes } from "../tools";
 import { Container } from "@mui/joy";
 import Tooltip from "@mui/joy/Tooltip";
 import { toast } from "react-toastify";
+import { TokenItem } from "../api";
+import { ethers } from "ethers";
 
 export function ApikeyStatus() {
   const [apikeyStatus] = useAtom(apikeyStatusAtom);
@@ -57,7 +59,7 @@ export function ApikeyStatus() {
           token balances in this apikey:
         </Typography>
         <ul>
-          <TokenBalanceList tokenBalance={apikeyStatus.tokenBalance} />
+          <TokenBalanceList tokenBalance={apikeyStatus.tokens} />
         </ul>
         <Suspense fallback="loading get apikey button">
           <GetApikeyButton />
@@ -136,16 +138,21 @@ function CapText({ bytes }: { bytes: string }) {
 function TokenBalanceList({
   tokenBalance,
 }: {
-  tokenBalance: Record<string, string>;
+  tokenBalance: {
+    [tokenTag: string]: TokenItem;
+  };
 }) {
   const balancesItem = useMemo(
     () =>
-      // TODO: parse decimal here...
-      Object.keys(tokenBalance).map((o) => (
-        <li key={o}>
-          {o}: {tokenBalance[o]}
-        </li>
-      )),
+      Object.keys(tokenBalance).map((o) => {
+        const { symbol, balance, decimals } = tokenBalance[o];
+        const balanceText = ethers.utils.formatUnits(balance, decimals);
+        return (
+          <li key={o}>
+            {symbol}: {balanceText}
+          </li>
+        );
+      }),
     [tokenBalance]
   );
 

@@ -20,10 +20,17 @@ export const getApikey = async (curTime: number, signature: string) => {
   return data;
 };
 
+export type TokenItem = {
+  balance: string;
+  decimals: number;
+  symbol: string;
+};
 export type ApikeyStatusType =
   | {
       estimateCap: string;
-      tokenBalance: Record<string, string>;
+      tokens: {
+        [tokenTag: string]: TokenItem;
+      };
     }
   | {
       error: string;
@@ -40,7 +47,7 @@ export async function fetchApikeyStatusFn({
     `https://arseed.web3infura.io/apikey_info/${address}`
   );
   const data = (await res.json()) as ApikeyStatusType;
-
+  console.error({ data });
   return data;
 }
 
