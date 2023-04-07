@@ -3,18 +3,13 @@ import { accountAtom } from "./states";
 import { useAtom } from "jotai";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
-import Divider from "@mui/joy/Divider";
-import {
-  AccountBalances,
-  ApikeyStatus,
-  ArseedingBundlerStatus,
-  Topup,
-} from "./components";
+import { ApikeyStatus, ArseedingBundlerStatus, Topup } from "./components";
 import CircularProgress from "@mui/joy/CircularProgress";
 import { UnconnectView } from "./components/connectWallet";
 import { MyAppBar } from "./components/appBar";
-import { Typography } from "@mui/joy";
+import Typography from "@mui/joy/Typography";
 import { useTranslation } from "react-i18next";
+import Skeleton from "@mui/material/Skeleton";
 
 function App() {
   const [account] = useAtom(accountAtom);
@@ -31,7 +26,16 @@ function App() {
       <MyAppBar />
       {account ? <ConnectedView /> : <UnconnectView />}
       <Container maxWidth="lg">
-        <Suspense fallback={<CircularProgress variant="solid" />}>
+        <Suspense
+          fallback={
+            <Skeleton>
+              <Typography>
+                arseeding bundler address:
+                uDA8ZblC-lyEFfsYXKewpwaX-kkNDDw8az3IW9bDL68
+              </Typography>
+            </Skeleton>
+          }
+        >
           <ArseedingBundlerStatus />
         </Suspense>
       </Container>
@@ -73,9 +77,7 @@ function Start() {
       gridColumn={{ xs: "span 12", md: "span 6", lg: "span 6" }}
     >
       <Typography level="h4">{t("Top up")}</Typography>
-      <Suspense fallback={<CircularProgress variant="solid" />}>
-        <Topup />
-      </Suspense>
+      <Topup />
     </Box>
   );
 }

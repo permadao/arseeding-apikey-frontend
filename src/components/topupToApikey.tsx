@@ -1,4 +1,4 @@
-import { useState, Suspense, useMemo, useEffect } from "react";
+import { useState, Suspense, useMemo } from "react";
 import {
   topupAmountAtom,
   topupTokenSymbolAtom,
@@ -23,22 +23,20 @@ import Option from "@mui/joy/Option";
 import Select from "@mui/joy/Select";
 import BigNumber from "bignumber.js";
 import { StoringCostEstimator } from "./storingCostsEstimator";
-import { CircularProgress } from "@mui/joy";
 import Divider from "@mui/joy/Divider";
 import { useTranslation } from "react-i18next";
+import { loadable } from "jotai/utils";
 
 const isTopupButtonLoadingAtom = atom(false);
 
 export function Topup() {
   const { t } = useTranslation();
-  const [topupTag] = useAtom(topupTagAtom);
   const [topupAmount, setTopupAmount] = useAtom(topupAmountAtom);
   const [, topupApikeyFn] = useAtom(topupApikeyAtom);
   const [hash, setHash] = useState<string | null>();
-  const [topupTokenSymbol] = useAtom(topupTokenSymbolAtom);
   const [, setIsTopupButtonLoading] = useAtom(isTopupButtonLoadingAtom);
 
-  const testHandleTopup = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleTopup = async (event: React.FormEvent<HTMLFormElement>) => {
     // prevent default behavior of the Browser.
     event.preventDefault();
 
@@ -94,20 +92,9 @@ export function Topup() {
         marginTop: "10px",
       }}
     >
-      {hash && (
-        <Alert startDecorator={<CheckCircleIcon />} variant="soft">
-          <div>
-            <Typography fontWeight="lg" mt={0.25}>
-              Success
-            </Typography>
-            <Typography fontSize="sm" sx={{ opacity: 0.8 }}>
-              transaction {hash} has been commit to everpay mainnet!
-            </Typography>
-          </div>
-        </Alert>
-      )}
+      <AlertView hash={hash} />
 
-      <form onSubmit={testHandleTopup}>
+      <form onSubmit={handleTopup}>
         <Input
           type="number"
           placeholder="topup amount"
@@ -119,19 +106,21 @@ export function Topup() {
             <>
               <Divider orientation="vertical" />
               <Suspense
-                fallback={<Skeleton variant="rectangular" height={50} />}
+                fallback={
+                  <Skeleton>
+                    <Box>
+                      <Typography>testsdt</Typography>
+                    </Box>
+                  </Skeleton>
+                }
               >
                 <TokenList />
               </Suspense>
             </>
           }
         />
-        <Box sx={{ display: "flex", justifyContent: "flex-start" }}>
-          <MaxButton />
-        </Box>
-        <Suspense fallback={<CircularProgress variant="solid" />}>
-          <StoringCostEstimator />
-        </Suspense>
+        <MaxButton />
+        <StoringCostEstimator />
         <Box
           sx={(theme) => ({
             marginTop: theme.spacing(2),
@@ -147,9 +136,33 @@ export function Topup() {
   );
 }
 
+function AlertView({ hash }: { hash: string | null | undefined }) {
+  if (hash) {
+    return (
+      <Alert startDecorator={<CheckCircleIcon />} variant="soft">
+        <Box>
+          <Typography fontWeight="lg" mt={0.25}>
+            Success
+          </Typography>
+          <Typography fontSize="sm" sx={{ opacity: 0.8 }}>
+            transaction {hash} has been commit to everpay mainnet!
+          </Typography>
+        </Box>
+      </Alert>
+    );
+  }
+  return <></>;
+}
+
 function MaxButton() {
   return (
-    <Suspense fallback={<CircularProgress />}>
+    <Suspense
+      fallback={
+        <Skeleton>
+          <Button>Testdtsadst</Button>
+        </Skeleton>
+      }
+    >
       <LoadableMaxButton />
     </Suspense>
   );
@@ -186,20 +199,22 @@ function LoadableMaxButton() {
     return item[0].symbol;
   };
   return (
-    <Button
-      sx={(theme) => ({
-        color: theme.palette.text.secondary,
-        paddingLeft: "0",
-        paddingTop: "0",
-      })}
-      variant="plain"
-      onClick={() => {
-        setTopupAmount(max());
-      }}
-    >
-      {t("Max")}：{max().toString()}
-      {symbol()}
-    </Button>
+    <Box sx={{ display: "flex", justifyContent: "flex-start" }}>
+      <Button
+        sx={(theme) => ({
+          color: theme.palette.text.secondary,
+          paddingLeft: "0",
+          paddingTop: "0",
+        })}
+        variant="plain"
+        onClick={() => {
+          setTopupAmount(max());
+        }}
+      >
+        {t("Max")}：{max().toString()}
+        {symbol()}
+      </Button>
+    </Box>
   );
 }
 
@@ -225,21 +240,27 @@ function ClearButton() {
   );
 }
 
+const loadableBalancesAtom = loadable(balancesAtom);
+
 function TopupButton() {
   const { t } = useTranslation();
   const [topupTag] = useAtom(topupTagAtom);
-  const [balances] = useAtom(balancesAtom);
+  const [balances] = useAtom(loadableBalancesAtom);
   const [topupAmount] = useAtom(topupAmountAtom);
-  const [isLoading] = useAtom(isTopupButtonLoadingAtom);
+  const [isTopupButtonLoading] = useAtom(isTopupButtonLoadingAtom);
 
   const isSufficinent = useMemo(() => {
-    const t = balances.filter((b) => b.tag === topupTag);
+    if (balances.state !== "hasData") {
+      return false;
+    }
+    const t = balances.data.filter((b) => b.tag === topupTag);
     return t.length === 1 && BigNumber(t[0].balance).gte(topupAmount);
   }, [balances, topupTag, topupAmount]);
 
   const isDanger = useMemo(() => {
     return !topupTag || topupAmount.isZero() || !topupAmount || !isSufficinent;
   }, [topupTag, topupAmount, isSufficinent]);
+  const isLoading = isTopupButtonLoading || balances.state === "loading";
 
   const btnText = () => {
     if (topupAmount.isZero()) {

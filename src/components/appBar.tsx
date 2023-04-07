@@ -141,9 +141,5 @@ function ElevationScroll(props: Props) {
 }
 
 function LoadableWalletStatusBtn() {
-  return (
-    <Suspense fallback={<CircularProgress variant="solid" />}>
-      <AccountState />
-    </Suspense>
-  );
+  return <AccountState />;
 }

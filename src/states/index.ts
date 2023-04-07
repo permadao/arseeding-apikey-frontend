@@ -233,12 +233,6 @@ export const topupApikeyAtom = atom(
   }
 );
 
-export const connectWalletFnAtom = atom(async (get) => {
-  const provider = await get(providerAtom);
-  return async () =>
-    (await provider.send("eth_requestAccounts", [])) as string[];
-});
-
 export type ConnectWalletFnType = {
   provider: ethers.providers.Web3Provider;
 };
@@ -254,5 +248,3 @@ export const connectWalletFnV2Atom = atom(
     return accounts;
   }
 );
-
-export const loadableConnectWalletFnAtom = loadable(connectWalletFnAtom);

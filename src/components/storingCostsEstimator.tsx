@@ -25,7 +25,6 @@ import { extractCostInUSDAtom } from "../states";
 
 export function StoringCostEstimator() {
   const { t } = useTranslation();
-
   return (
     <Box
       sx={(theme) => ({
