@@ -32,6 +32,7 @@ i18n
           English: "English",
           简体中文: "简体中文",
           copied: "copied",
+          "Transaction histories": "Transaction histories",
         },
       },
       zh: {
@@ -57,6 +58,7 @@ i18n
           English: "English",
           简体中文: "简体中文",
           copied: "已复制",
+          "Transaction histories": "交易记录",
         },
       },
     },

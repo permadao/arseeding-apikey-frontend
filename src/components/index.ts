@@ -5,3 +5,4 @@ export * from "./accountBalances";
 export * from "./topupToApikey";
 export * from "./accountState";
 export * from "./storingCostsEstimator";
+export * from "./boxTitle";

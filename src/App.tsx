@@ -3,7 +3,12 @@ import { accountAtom } from "./states";
 import { useAtom } from "jotai";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
-import { ApikeyStatus, ArseedingBundlerStatus, Topup } from "./components";
+import {
+  ApikeyStatus,
+  ArseedingBundlerStatus,
+  BoxTitle,
+  Topup,
+} from "./components";
 import CircularProgress from "@mui/joy/CircularProgress";
 import { UnconnectView } from "./components/connectWallet";
 import { MyAppBar } from "./components/appBar";
@@ -76,21 +81,14 @@ function Start() {
       })}
       gridColumn={{ xs: "span 12", md: "span 6", lg: "span 6" }}
     >
-      <Typography
-        level="h4"
-        sx={(theme) => ({
-          fontSize: theme.fontSize.xl,
-          fontWeight: theme.fontWeight.xl,
-        })}
-      >
-        {t("Top up")}
-      </Typography>
+      <BoxTitle title={t("Top up")} />
       <Topup />
     </Box>
   );
 }
 
 function End() {
+  const { t } = useTranslation();
   return (
     <Box
       sx={(theme) => ({
@@ -100,6 +98,7 @@ function End() {
       })}
       gridColumn={{ xs: "span 12", md: "span 6", lg: "span 6" }}
     >
+      <BoxTitle title={t("Transaction histories")} />
       grid container 2
     </Box>
   );
