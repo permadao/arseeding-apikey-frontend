@@ -1,17 +1,13 @@
 import { atom, useAtom } from "jotai";
 import { atomsWithInfiniteQuery } from "jotai-tanstack-query";
 import { accountAtom } from "../states";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import Table from "@mui/joy/Table";
-import Sheet from "@mui/joy/Sheet";
 import { Box, IconButton, Typography } from "@mui/joy";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
-import { useInfiniteQuery } from "@tanstack/react-query";
 import { ethers } from "ethers";
 import dayjs from "dayjs";
-import * as relativeTime from "dayjs/plugin/relativeTime";
-dayjs.extend(relativeTime);
 
 const numAtom = atom(10);
 

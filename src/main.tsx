@@ -11,6 +11,9 @@ import { Provider } from "jotai";
 import { mergedTheme } from "./theme";
 import { ToastContainer } from "react-toastify";
 import "./locales/index";
+import { extend } from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime.js";
+extend(relativeTime);
 
 const queryClient = new QueryClient({
   defaultOptions: {

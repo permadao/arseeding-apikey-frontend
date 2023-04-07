@@ -30,6 +30,7 @@ export default defineConfig(({ mode }) => {
       },
     },
     optimizeDeps: {
+      include: ["dayjs", "dayjs/plugin/relativeTime"],
       esbuildOptions: {
         plugins: [
           NodeGlobalsPolyfillPlugin({
