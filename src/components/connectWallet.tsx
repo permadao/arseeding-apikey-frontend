@@ -8,6 +8,7 @@ import Typography from "@mui/joy/Typography";
 import WarningIcon from "@mui/icons-material/Warning";
 import { useTranslation } from "react-i18next";
 import { loadable } from "jotai/utils";
+import walletSvg from "../assets/wallet.svg";
 
 const errorMessageAtom = atom<string | null>(null);
 const loadableProviderAtom = loadable(providerAtom);
@@ -65,6 +66,16 @@ export function UnconnectView() {
           borderRadius: theme.shape.borderRadius,
         })}
       >
+        <img src={walletSvg} alt="wallet logo png" />
+        <Typography
+          sx={(theme) => ({
+            color: theme.palette.text.secondary,
+            fontSize: theme.fontSize.sm,
+            textAlign: "center",
+          })}
+        >
+          连接钱包以启用 Arseeding Apikey 服务
+        </Typography>
         {errorMessage && <AlertView errorMessage={errorMessage} />}
         <Button
           loading={provider.state === "loading"}

@@ -61,11 +61,18 @@ export function ApikeyStatus() {
           borderRadius: theme.shape.borderRadius,
         })}
       >
-        <Typography level="h4" sx={{ mb: 0.5 }}>
+        <Typography
+          level="h4"
+          sx={(theme) => ({
+            fontSize: theme.fontSize.xl,
+            fontWeight: theme.fontWeight.xl,
+            mb: 0.5,
+          })}
+        >
           {t("Apikey Status")}
         </Typography>
 
-        <List component="div" disablePadding>
+        <List component="div" disablePadding={false} dense>
           <ApikeyContainer />
           <CapText bytes={apikeyStatus.estimateCap} />
           <TokenBalanceView tokenBalance={apikeyStatus.tokens} />

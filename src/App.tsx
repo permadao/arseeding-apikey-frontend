@@ -76,7 +76,15 @@ function Start() {
       })}
       gridColumn={{ xs: "span 12", md: "span 6", lg: "span 6" }}
     >
-      <Typography level="h4">{t("Top up")}</Typography>
+      <Typography
+        level="h4"
+        sx={(theme) => ({
+          fontSize: theme.fontSize.xl,
+          fontWeight: theme.fontWeight.xl,
+        })}
+      >
+        {t("Top up")}
+      </Typography>
       <Topup />
     </Box>
   );
