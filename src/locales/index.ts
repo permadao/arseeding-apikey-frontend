@@ -60,10 +60,12 @@ i18n
         },
       },
     },
-    lng: "zh", // if you're using a language detector, do not define the lng option
+    // if you're using a language detector, do not define the lng option
+    lng: "zh",
     fallbackLng: "zh",
     interpolation: {
-      escapeValue: false, // react already safes from xss => https://www.i18next.com/translation-function/interpolation#unescape
+      // react already safes from xss => https://www.i18next.com/translation-function/interpolation#unescape
+      escapeValue: false,
     },
   });
 

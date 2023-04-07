@@ -22,7 +22,7 @@ import Input from "@mui/joy/Input";
 import Option from "@mui/joy/Option";
 import Select from "@mui/joy/Select";
 import BigNumber from "bignumber.js";
-import { StoringCostEstimator } from "./storingCosts";
+import { StoringCostEstimator } from "./storingCostsEstimator";
 import { CircularProgress } from "@mui/joy";
 import Divider from "@mui/joy/Divider";
 import { useTranslation } from "react-i18next";

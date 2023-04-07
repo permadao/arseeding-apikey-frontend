@@ -4,4 +4,4 @@ export * from "./arseedingBundler";
 export * from "./accountBalances";
 export * from "./topupToApikey";
 export * from "./accountState";
-export * from "./storingCosts";
+export * from "./storingCostsEstimator";
