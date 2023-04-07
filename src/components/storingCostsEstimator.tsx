@@ -44,6 +44,7 @@ export function StoringCostEstimator() {
             color: theme.palette.text.secondary,
           })}
           variant="plain"
+          size="sm"
         >
           <HelpOutlineIcon />
         </IconButton>
@@ -54,7 +55,28 @@ export function StoringCostEstimator() {
   );
 }
 
+const iters = [
+  { bytes: 1073741824 / 1024, color: "#FFC10C" },
+  { bytes: (1073741824 / 1024) * 200, color: "#0D6EFD" },
+  {
+    bytes: 1073741824 * 1,
+    color: "#33CDAA",
+  },
+  {
+    bytes: 1073741824 * 1024,
+    color: "#7749F8",
+  },
+];
+
 function Estimator() {
+  const items = useMemo(
+    () =>
+      iters.map((i) => (
+        <LoadableItem key={i.bytes} bytes={i.bytes} color={i.color} />
+      )),
+    [iters]
+  );
+
   return (
     <Box
       display="grid"
@@ -63,15 +85,12 @@ function Estimator() {
       })}
       gridTemplateColumns="repeat(12, 1fr)"
     >
-      <LoadableItem bytes={1073741824 / 1024} />
-      <LoadableItem bytes={(1073741824 / 1024) * 200} />
-      <LoadableItem bytes={1073741824 * 1} />
-      <LoadableItem bytes={1073741824 * 1024} />
+      {items}
     </Box>
   );
 }
 
-function LoadableItem({ bytes }: { bytes: number }) {
+function LoadableItem({ bytes, color }: { bytes: number; color: string }) {
   const { t } = useTranslation();
   const [costInToken, setCostInToken] = useState<number | null>(null);
   const [, setTopupAmount] = useAtom(topupAmountAtom);
@@ -95,27 +114,49 @@ function LoadableItem({ bytes }: { bytes: number }) {
         display: "grid",
         placeContent: "center",
         placeItems: "center",
-        padding: theme.spacing(1),
+        padding: theme.spacing(2),
         border: "1px solid #dfdfdf",
       })}
       gridColumn={{ xs: "span 12", sm: "span 6", md: "span 6", lg: "span 6" }}
     >
-      <Typography>
+      <Typography
+        sx={(theme) => ({
+          color: theme.palette.text.secondary,
+          fontSize: theme.fontSize.sm,
+        })}
+      >
         {t("Per")} {formatBytes(bytes)}
       </Typography>
       <Suspense
         fallback={
           <Skeleton>
-            <Typography>0.00674992DAI</Typography>
+            <Typography
+              sx={(theme) => ({
+                fontSize: theme.fontSize.lg,
+                color,
+              })}
+            >
+              0.00674992DAI
+            </Typography>
           </Skeleton>
         }
       >
-        <CostInToken bytes={bytes} setCostInToken={setCostInToken} />
+        <CostInToken
+          color={color}
+          bytes={bytes}
+          setCostInToken={setCostInToken}
+        />
       </Suspense>
       <Suspense
         fallback={
           <Skeleton>
-            <Typography>$1.3496041015625</Typography>
+            <Typography
+              sx={(theme) => ({
+                fontSize: theme.fontSize.sm,
+              })}
+            >
+              $1.3496041015625
+            </Typography>
           </Skeleton>
         }
       >
@@ -131,15 +172,25 @@ function CostInUSD({ bytes }: { bytes: number }) {
     .toFixed(6)
     .toString();
 
-  return <Typography> ${costInUSD}</Typography>;
+  return (
+    <Typography
+      sx={(theme) => ({
+        fontSize: theme.fontSize.sm,
+      })}
+    >
+      {" "}
+      ${costInUSD}
+    </Typography>
+  );
 }
 
 function CostInToken({
   bytes,
   setCostInToken,
+  color,
 }: {
   bytes: number;
-
+  color: string;
   setCostInToken: (costInToken: number | null) => void;
 }) {
   const [storageSizeBase] = useAtom(storingCostEstimateSizeBaseAtom);
@@ -158,7 +209,12 @@ function CostInToken({
   useEffect(() => setCostInToken(Number(costInToken)), [costInToken]);
 
   return (
-    <Typography>
+    <Typography
+      sx={(theme) => ({
+        fontSize: theme.fontSize.lg,
+        color,
+      })}
+    >
       {costInToken}
       {topupTokenSymbol}
     </Typography>
