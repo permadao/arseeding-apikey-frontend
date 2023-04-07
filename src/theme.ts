@@ -209,9 +209,10 @@ const joyTheme = extendJoyTheme({
           solidDisabledBg: "var(--mui-palette-primary-200)",
           softColor: "#000",
           plainColor: "var(--mui-palette-primary-main)",
-          plainHoverBg:
-            "rgba(var(--mui-palette-primary-mainChannel) / var(--mui-palette-action-hoverOpacity))",
-          plainActiveBg: "rgba(var(--mui-palette-primary-mainChannel) / 0.3)",
+          plainHoverBg: "#eee",
+          // "rgba(var(--mui-palette-primary-mainChannel) / var(--mui-palette-action-hoverOpacity))",
+          plainActiveBg: "#ddd",
+          // plainActiveBg: "rgba(var(--mui-palette-primary-mainChannel) / 0.3)",
           outlinedBorder: "rgba(var(--mui-palette-primary-mainChannel) / 0.5)",
           outlinedColor: "var(--mui-palette-primary-main)",
           outlinedHoverBg:

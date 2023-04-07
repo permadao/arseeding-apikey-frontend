@@ -21,6 +21,7 @@
     "@tanstack/react-query": "^4.28.0",
     "bignumber.js": "^9.1.1",
     "buffer": "^6.0.3",
+    "dayjs": "^1.11.7",
     "ethers": "^5.4",
     "everpay": "^0.6.1",
     "i18next": "^22.4.14",

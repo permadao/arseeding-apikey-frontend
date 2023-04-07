@@ -8,6 +8,7 @@ import {
   ArseedingBundlerStatus,
   BoxTitle,
   Topup,
+  TransactionHistories,
 } from "./components";
 import CircularProgress from "@mui/joy/CircularProgress";
 import { UnconnectView } from "./components/connectWallet";
@@ -78,6 +79,7 @@ function Start() {
         padding: theme.spacing(3),
         background: theme.palette.background.paper,
         borderRadius: theme.shape.borderRadius,
+        height: "min-content",
       })}
       gridColumn={{ xs: "span 12", md: "span 6", lg: "span 6" }}
     >
@@ -95,11 +97,14 @@ function End() {
         padding: theme.spacing(3),
         background: theme.palette.background.paper,
         borderRadius: theme.shape.borderRadius,
+        height: "min-content",
       })}
       gridColumn={{ xs: "span 12", md: "span 6", lg: "span 6" }}
     >
       <BoxTitle title={t("Transaction histories")} />
-      grid container 2
+      <Suspense fallback="loading histories">
+        <TransactionHistories />
+      </Suspense>
     </Box>
   );
 }
