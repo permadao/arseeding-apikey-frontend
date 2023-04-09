@@ -8,6 +8,7 @@ import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import { ethers } from "ethers";
 import dayjs from "dayjs";
+import { useTranslation } from "react-i18next";
 
 const numAtom = atom(10);
 
@@ -60,6 +61,7 @@ const [historiesAtom] = atomsWithInfiniteQuery((get) => {
 });
 
 export function TransactionHistories() {
+  const { t } = useTranslation();
   const [pageIndex, setPageIndex] = useState(0);
   const [histories, dispatch] = useAtom(historiesAtom);
 
@@ -121,11 +123,11 @@ export function TransactionHistories() {
       >
         <thead>
           <tr>
-            <th>rawId</th>
-            <th>symbol</th>
-            <th>amount</th>
-            <th>everHash</th>
-            <th>timestamp</th>
+            <th>{t("rawId")}</th>
+            <th>{t("token")}</th>
+            <th>{t("amount")}</th>
+            <th>{t("everHash")}</th>
+            <th>{t("timestamp")}</th>
           </tr>
         </thead>
         <tbody>{items}</tbody>

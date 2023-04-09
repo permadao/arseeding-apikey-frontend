@@ -66,7 +66,16 @@ export function UnconnectView() {
           borderRadius: theme.shape.borderRadius,
         })}
       >
-        <img src={walletSvg} alt="wallet logo png" />
+        <Container
+          sx={(theme) => ({
+            display: "grid",
+            placeContent: "center",
+            placeItems: "center",
+            padding: `0 ${theme.spacing(5.375)}`,
+          })}
+        >
+          <img src={walletSvg} alt="wallet logo png" />
+        </Container>
         <Typography
           sx={(theme) => ({
             color: theme.palette.text.secondary,
@@ -74,7 +83,7 @@ export function UnconnectView() {
             textAlign: "center",
           })}
         >
-          连接钱包以启用 Arseeding Apikey 服务
+          {t("Connect Wallet to Adopt Arseeding Apikey")}
         </Typography>
         {errorMessage && <AlertView errorMessage={errorMessage} />}
         <Button
