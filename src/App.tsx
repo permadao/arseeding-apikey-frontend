@@ -5,17 +5,15 @@ import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import {
   ApikeyStatus,
-  ArseedingBundlerStatus,
   BoxTitle,
+  Footer,
   Topup,
   TransactionHistories,
 } from "./components";
 import CircularProgress from "@mui/joy/CircularProgress";
 import { UnconnectView } from "./components/connectWallet";
 import { MyAppBar } from "./components/appBar";
-import Typography from "@mui/joy/Typography";
 import { useTranslation } from "react-i18next";
-import Skeleton from "@mui/material/Skeleton";
 
 function App() {
   const [account] = useAtom(accountAtom);
@@ -31,20 +29,7 @@ function App() {
     >
       <MyAppBar />
       {account ? <ConnectedView /> : <UnconnectView />}
-      <Container maxWidth="lg">
-        <Suspense
-          fallback={
-            <Skeleton>
-              <Typography>
-                arseeding bundler address:
-                uDA8ZblC-lyEFfsYXKewpwaX-kkNDDw8az3IW9bDL68
-              </Typography>
-            </Skeleton>
-          }
-        >
-          <ArseedingBundlerStatus />
-        </Suspense>
-      </Container>
+      <Footer />
     </Box>
   );
 }

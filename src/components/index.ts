@@ -7,3 +7,4 @@ export * from "./accountState";
 export * from "./storingCostsEstimator";
 export * from "./boxTitle";
 export * from "./transactionHistories";
+export * from "./footer";
