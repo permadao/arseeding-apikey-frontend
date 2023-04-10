@@ -10,6 +10,7 @@ import { Button } from "@mui/joy";
 import Person3RoundedIcon from "@mui/icons-material/Person3Rounded";
 import { OrderKey } from "../types";
 import { orderBy } from "lodash";
+import PeopleAltRoundedIcon from "@mui/icons-material/PeopleAltRounded";
 
 const buttons = [
   {
@@ -81,6 +82,7 @@ export function Footer() {
       />
       <Box>{Buttons}</Box>
       <Typography
+        startDecorator={<PeopleAltRoundedIcon fontSize="lg" />}
         sx={(theme) => ({
           color: theme.palette.text.secondary,
           fontSize: theme.fontSize.sm,
