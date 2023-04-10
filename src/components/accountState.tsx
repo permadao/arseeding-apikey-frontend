@@ -1,7 +1,7 @@
 import { useAtom } from "jotai";
 import { accountAtom, metamaskProviderAtom } from "../states";
 import Button from "@mui/joy/Button";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { loadable } from "jotai/utils";
 
@@ -29,8 +29,16 @@ export function AccountState() {
     }
   }, [metamaskProvider]);
 
-  const isLoading =
-    typeof account !== "string" || metamaskProvider.state === "loading";
+  const isLoading = useMemo(
+    () => typeof account !== "string" || metamaskProvider.state === "loading",
+    [account, metamaskProvider.state]
+  );
+
+  const accountText = useMemo(() => {
+    if (isLoading) return t("Wallet Connected");
+    const a = account?.substring(0, 10);
+    return a ? `${a}...` : "";
+  }, [account, isLoading]);
 
   const handleClick = () => {
     // setMetamaskProviderAtom("hahaha");
@@ -43,7 +51,7 @@ export function AccountState() {
         marginLeft: theme.spacing(2),
       })}
     >
-      {t("Wallet Connected")}
+      {accountText}
     </Button>
   );
 }
