@@ -1,8 +1,6 @@
 import { atomsWithInfiniteQuery } from "jotai-tanstack-query";
-import { accountAtom } from ".";
+import { accountAtom, numAtom } from ".";
 import { atom } from "jotai";
-
-const numAtom = atom(10);
 
 type History = {
   rawId: string;
