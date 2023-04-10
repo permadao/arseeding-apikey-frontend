@@ -1,6 +1,6 @@
 import { useAtom } from "jotai";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Table from "@mui/joy/Table";
 import { Box, IconButton, Typography } from "@mui/joy";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
@@ -9,44 +9,51 @@ import { ethers } from "ethers";
 import dayjs from "dayjs";
 import { useTranslation } from "react-i18next";
 import { historiesAtom } from "../states";
+import CircularProgress from "@mui/joy/CircularProgress";
 
-export function TransactionHistories() {
+export function TransactionHistories({
+  setHasPage,
+}: {
+  setHasPage: (expand: boolean) => void;
+}) {
   const { t } = useTranslation();
   const [pageIndex, setPageIndex] = useState(0);
   const [histories, dispatch] = useAtom(historiesAtom);
 
+  const hasPage = useMemo(
+    () => !(histories.pages.length === 1 && histories.pages[0].length === 0),
+    [histories]
+  );
+
+  useEffect(() => setHasPage(hasPage), [histories.pages]);
+
   const fetchNextPage = () => dispatch({ type: "fetchNextPage" });
-  // https://scan.everpay.io/tx/0xab2f787d06041582bd984b549c885dac50cae22599e254141857f506206027ba
 
   const handleFetchNextPage = async () => {
-    await fetchNextPage();
-    // TODO: need refactor here.
     const index = pageIndex + 1;
-    const t = histories.pages.length - 1;
-    if (index >= t) {
-      setPageIndex(t);
-      return;
-    }
-    setPageIndex(pageIndex + 1);
+    const t = histories.pages.length;
+    setPageIndex(index > t ? t - 1 : index);
+    await fetchNextPage();
   };
   const handleFetchPreviousPage = async () => {
-    if (pageIndex <= 0) {
-      setPageIndex(0);
-      return;
-    }
-    setPageIndex(pageIndex - 1);
+    const newIndex = pageIndex - 1;
+    setPageIndex(newIndex <= 0 ? 0 : newIndex);
   };
 
   const items = useMemo(() => {
-    if (histories.pages.length >= 1) {
-      const firstPage = histories.pages[pageIndex];
-      return firstPage.map((t) => {
-        const handleClick = () => {
-          const url = `https://scan.everpay.io/tx/${t.everHash}`;
+    const currentPage = histories.pages[pageIndex];
+    if (currentPage) {
+      return currentPage.map((t) => {
+        const handleOpenTransaction = (everHash: string) => {
+          const url = `https://scan.everpay.io/tx/${everHash}`;
           window.open(url);
         };
         return (
-          <tr key={t.rawId} onClick={handleClick}>
+          <tr
+            style={{ cursor: "pointer" }}
+            key={t.rawId}
+            onClick={() => handleOpenTransaction(t.everHash)}
+          >
             <td>{t.rawId}</td>
             <td>{t.symbol}</td>
             <td>{ethers.utils.formatUnits(t.amount, t.decimals)}</td>
@@ -57,8 +64,36 @@ export function TransactionHistories() {
           </tr>
         );
       });
+    } else {
+      return (
+        <Box
+          sx={{
+            width: "100%",
+            display: "grid",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      );
     }
-  }, [histories.pages, pageIndex]);
+  }, [histories, pageIndex]);
+
+  if (!hasPage) {
+    return (
+      <Box
+        sx={{
+          display: "grid",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100%",
+        }}
+      >
+        <Typography>{t("No more history item.")}</Typography>
+      </Box>
+    );
+  }
 
   return (
     <Box>

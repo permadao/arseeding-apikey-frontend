@@ -40,6 +40,7 @@ i18n
           amount: "amount",
           everHash: "everHash",
           timestamp: "timestamp",
+          "No more history item.": "No more history item.",
         },
       },
       zh: {
@@ -73,6 +74,7 @@ i18n
           amount: "数量",
           everHash: "everHash",
           timestamp: "时间",
+          "No more history item.": "没有记录",
         },
       },
     },

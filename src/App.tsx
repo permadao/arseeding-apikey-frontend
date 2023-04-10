@@ -1,4 +1,4 @@
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 import { accountAtom } from "./states";
 import { useAtom } from "jotai";
 import Container from "@mui/material/Container";
@@ -26,7 +26,7 @@ function App() {
       sx={{
         gridTemplateRows: "min-content 1fr min-content",
         minHeight: "100vh",
-        background: "linear-gradient(90deg, #F3FFFC 0%, #FAF4FC 92.08%)",
+        background: "linear-gradient(90deg, #F3FFFC 0%, #FAF4FC 100%)",
       }}
     >
       <MyAppBar />
@@ -52,9 +52,6 @@ function App() {
 function ConnectedView() {
   return (
     <Box>
-      {/* <Suspense fallback={<CircularProgress variant="solid" />}>
-        <AccountBalances />
-      </Suspense> */}
       <Suspense fallback={<CircularProgress variant="solid" />}>
         <ApikeyStatus />
       </Suspense>
@@ -91,19 +88,21 @@ function Start() {
 
 function End() {
   const { t } = useTranslation();
+  const [hasPage, setHasPage] = useState<boolean>(false);
+
   return (
     <Box
       sx={(theme) => ({
         padding: theme.spacing(3),
         background: theme.palette.background.paper,
         borderRadius: theme.shape.borderRadius,
-        height: "min-content",
+        height: hasPage ? "min-content" : "inherit",
       })}
       gridColumn={{ xs: "span 12", md: "span 6", lg: "span 6" }}
     >
       <BoxTitle title={t("Transaction histories")} />
-      <Suspense fallback="loading histories">
-        <TransactionHistories />
+      <Suspense fallback={<CircularProgress />}>
+        <TransactionHistories setHasPage={setHasPage} />
       </Suspense>
     </Box>
   );
