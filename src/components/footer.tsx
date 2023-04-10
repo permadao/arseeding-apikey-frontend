@@ -11,48 +11,47 @@ import Person3RoundedIcon from "@mui/icons-material/Person3Rounded";
 import { OrderKey } from "../types";
 import { orderBy } from "lodash";
 
+const buttons = [
+  {
+    url: "https://twitter.com/perma_dao",
+    title: "PermaDAO",
+  },
+  {
+    url: "https://everpay.io/",
+    title: "Everpay",
+  },
+  {
+    url: "https://web3infra.dev/",
+    title: "Arseeding",
+  },
+];
+const persons = [
+  {
+    url: "https://github.com/ethever",
+    title: "ethever.eth",
+  },
+  {
+    url: "https://github.com/zyjblockchain",
+    title: "Sandy",
+  },
+  {
+    url: undefined,
+    title: "SONGZIWEI",
+  },
+  { url: undefined, title: "Tina夜猫猫" },
+  { url: undefined, title: "青草原" },
+  { url: undefined, title: "腾🌚" },
+];
+const orderKey: OrderKey<typeof buttons> = ["title"];
+const orderPat: Array<"desc" | "asc"> = ["asc"];
+const Buttons = orderBy(buttons, orderKey, orderPat).map((b) => (
+  <LinkButton key={b.url} title={b.title} url={b.url} iconPosition="end" />
+));
+const Persons = orderBy(persons, orderKey, orderPat).map((b) => (
+  <LinkButton key={b.url} title={b.title} url={b.url} iconPosition="start" />
+));
+
 export function Footer() {
-  const buttons = [
-    {
-      url: "https://twitter.com/perma_dao",
-      title: "PermaDAO",
-    },
-    {
-      url: "https://everpay.io/",
-      title: "Everpay",
-    },
-    {
-      url: "https://web3infra.dev/",
-      title: "Arseeding",
-    },
-  ];
-  const persons = [
-    {
-      url: "https://github.com/ethever",
-      title: "ethever.eth",
-    },
-    {
-      url: "https://github.com/zyjblockchain",
-      title: "Sandy",
-    },
-    {
-      url: undefined,
-      title: "SONGZIWEI",
-    },
-    { url: undefined, title: "Tina夜猫猫" },
-    { url: undefined, title: "青草原" },
-    { url: undefined, title: "腾🌚" },
-  ];
-  const orderKey: OrderKey<typeof buttons> = ["title"];
-  const orderPat: Array<"desc" | "asc"> = ["asc"];
-
-  const Buttons = orderBy(buttons, orderKey, orderPat).map((b) => (
-    <LinkButton key={b.url} title={b.title} url={b.url} iconPosition="end" />
-  ));
-  const Persons = orderBy(persons, orderKey, orderPat).map((b) => (
-    <LinkButton key={b.url} title={b.title} url={b.url} iconPosition="start" />
-  ));
-
   return (
     <Container
       maxWidth="lg"

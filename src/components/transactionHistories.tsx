@@ -60,7 +60,11 @@ export function TransactionHistories({
             <td>
               <Typography noWrap>{t.everHash}</Typography>
             </td>
-            <td>{dayjs(t.timestamp).fromNow(true)} ago</td>
+            <td>
+              <Typography noWrap>
+                {dayjs(t.timestamp).fromNow(true)} ago
+              </Typography>
+            </td>
           </tr>
         );
       });

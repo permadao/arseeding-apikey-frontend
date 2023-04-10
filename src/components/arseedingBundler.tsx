@@ -7,7 +7,12 @@ export function ArseedingBundlerStatus() {
   const [arseedingBundlerAddress] = useAtom(arseedingBundlerAddressAtom);
   return (
     <Box>
-      <Typography fontSize="sm">
+      <Typography
+        fontSize="sm"
+        sx={(theme) => ({
+          color: theme.palette.text.secondary,
+        })}
+      >
         arseeding bundler address: {arseedingBundlerAddress}
       </Typography>
     </Box>
