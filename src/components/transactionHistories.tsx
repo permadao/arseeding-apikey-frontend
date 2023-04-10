@@ -8,7 +8,7 @@ import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import { ethers } from "ethers";
 import dayjs from "dayjs";
 import { useTranslation } from "react-i18next";
-import { historiesAtom } from "../states";
+import { historiesAtom, numAtom } from "../states";
 import CircularProgress from "@mui/joy/CircularProgress";
 
 export function TransactionHistories({
@@ -17,17 +17,25 @@ export function TransactionHistories({
   setHasPage: (expand: boolean) => void;
 }) {
   const { t } = useTranslation();
+  const [num] = useAtom(numAtom);
   const [pageIndex, setPageIndex] = useState(0);
   const [histories, dispatch] = useAtom(historiesAtom);
 
   const hasPage = useMemo(
     () => !(histories.pages.length === 1 && histories.pages[0].length === 0),
-    [histories]
+    [histories.pages]
   );
 
   useEffect(() => setHasPage(hasPage), [histories.pages]);
 
   const fetchNextPage = () => dispatch({ type: "fetchNextPage" });
+  const isPreviousButtonAvailable = useMemo(() => pageIndex !== 0, [pageIndex]);
+  const isNextButtonAvailable = useMemo(() => {
+    const currentPage = histories.pages[pageIndex];
+    if (!currentPage) return false;
+    if (currentPage.length < num) return false;
+    return true;
+  }, [histories.pages, num, pageIndex]);
 
   const handleFetchNextPage = async () => {
     const index = pageIndex + 1;
@@ -127,10 +135,15 @@ export function TransactionHistories({
           justifyContent: "flex-end",
         }}
       >
-        <IconButton variant="plain" onClick={handleFetchPreviousPage}>
+        <IconButton
+          disabled={!isPreviousButtonAvailable}
+          variant="plain"
+          onClick={handleFetchPreviousPage}
+        >
           <KeyboardArrowLeftIcon />
         </IconButton>
         <IconButton
+          disabled={!isNextButtonAvailable}
           variant="plain"
           sx={(theme) => ({ marginLeft: theme.spacing(1) })}
           onClick={handleFetchNextPage}

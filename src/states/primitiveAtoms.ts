@@ -12,3 +12,4 @@ export const topupTagAtom = atom<string | null>(
 export const topupAmountAtom = atom<BigNumber>(BigNumber(0));
 export const accountAtom = atom<string | null>(null);
 export const apikeyAtom = atom<string | null>(null);
+export const numAtom = atom(10);
