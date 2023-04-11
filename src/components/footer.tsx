@@ -3,14 +3,15 @@ import Typography from "@mui/joy/Typography";
 import Skeleton from "@mui/material/Skeleton";
 import { ArseedingBundlerStatus } from "./arseedingBundler";
 import { Suspense } from "react";
-import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import Divider from "@mui/joy/Divider";
 import Box from "@mui/joy/Box";
-import { Button } from "@mui/joy";
-import Person3RoundedIcon from "@mui/icons-material/Person3Rounded";
+import { Button, IconButton } from "@mui/joy";
 import { OrderKey } from "../types";
 import { orderBy } from "lodash";
 import PeopleAltRoundedIcon from "@mui/icons-material/PeopleAltRounded";
+import GitHubIcon from "@mui/icons-material/GitHub";
+import Person3RoundedIcon from "@mui/icons-material/Person3Rounded";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
 const buttons = [
   {
@@ -49,10 +50,10 @@ const persons = [
 const orderKey: OrderKey<typeof buttons> = ["title"];
 const orderPat: Array<"desc" | "asc"> = ["asc"];
 const Buttons = orderBy(buttons, orderKey, orderPat).map((b) => (
-  <LinkButton key={b.url} title={b.title} url={b.url} iconPosition="end" />
+  <LinkButton key={b.title} title={b.title} url={b.url} iconPosition="end" />
 ));
 const Persons = orderBy(persons, orderKey, orderPat).map((b) => (
-  <LinkButton key={b.url} title={b.title} url={b.url} iconPosition="start" />
+  <LinkButton key={b.title} title={b.title} url={b.url} iconPosition="start" />
 ));
 
 export function Footer() {
@@ -83,7 +84,10 @@ export function Footer() {
           // a: theme.fontSize.
         })}
       />
-      <Box>{Buttons}</Box>
+      <Box display="flex">
+        <Box flexGrow={1}>{Buttons}</Box>
+        <GithubButton />
+      </Box>
       <Typography
         startDecorator={<PeopleAltRoundedIcon fontSize="lg" />}
         sx={(theme) => ({
@@ -97,6 +101,17 @@ export function Footer() {
       </Typography>
       <Box>{Persons}</Box>
     </Container>
+  );
+}
+
+function GithubButton() {
+  const handleOpenGithub = () => {
+    window.open("https://github.com/permadao/arseeding-apikey-frontend");
+  };
+  return (
+    <IconButton onClick={handleOpenGithub} variant="plain">
+      <GitHubIcon />
+    </IconButton>
   );
 }
 
