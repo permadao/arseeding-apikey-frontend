@@ -41,6 +41,7 @@ i18n
           everHash: "everHash",
           timestamp: "timestamp",
           "No more history item.": "No more history item.",
+          "Log out": "Disconnect",
         },
       },
       zh: {
@@ -75,6 +76,7 @@ i18n
           everHash: "everHash",
           timestamp: "时间",
           "No more history item.": "没有记录",
+          "Log out": "断开链接",
         },
       },
     },

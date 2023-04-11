@@ -66,16 +66,7 @@ export function UnconnectView() {
           borderRadius: theme.shape.borderRadius,
         })}
       >
-        <Container
-          sx={(theme) => ({
-            display: "grid",
-            placeContent: "center",
-            placeItems: "center",
-            padding: `0 ${theme.spacing(5.375)}`,
-          })}
-        >
-          <img src={walletSvg} alt="wallet logo png" />
-        </Container>
+        <img src={walletSvg} alt="wallet logo png" />
         <Typography
           sx={(theme) => ({
             color: theme.palette.text.secondary,

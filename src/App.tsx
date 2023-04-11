@@ -20,6 +20,7 @@ function App() {
 
   return (
     <Box
+      component="div"
       display="grid"
       sx={{
         gridTemplateRows: "min-content 1fr min-content",
