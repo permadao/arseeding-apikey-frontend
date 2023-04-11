@@ -31,6 +31,16 @@ export function ApikeyStatus() {
   const { t } = useTranslation();
 
   if ("error" in apikeyStatus) {
+    const errorText = () => {
+      if (apikeyStatus.error === "record not found") {
+        return (
+          <Typography>
+            {t("Topup to register current address a apikey.")}
+          </Typography>
+        );
+      }
+      return <Typography>{apikeyStatus.error}</Typography>;
+    };
     return (
       <Container
         sx={(theme) => ({
@@ -42,10 +52,7 @@ export function ApikeyStatus() {
         })}
         maxWidth="lg"
       >
-        <Typography>
-          {t("Topup to register current address a apikey.")}
-        </Typography>
-        <Typography>{apikeyStatus.error}</Typography>
+        {errorText()}
       </Container>
     );
   }
