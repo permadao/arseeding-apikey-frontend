@@ -3,6 +3,7 @@ import { sleep } from "../tools";
 import { atom } from "jotai";
 import detectEthereumProvider from "@metamask/detect-provider";
 import { CannotFindMetamaskWalletError } from "../errors";
+import { accountAtom } from "./primitiveAtoms";
 
 export const providerAtom = atom(async (get) => {
   const metamaskProvider = await get(metamaskProviderAtom);
@@ -13,6 +14,10 @@ export const providerAtom = atom(async (get) => {
 export const signerAtom = atom(async (get) => {
   const provider = await get(providerAtom);
   return provider.getSigner();
+});
+
+export const simulateDisconnectWalletAtom = atom(null, (get, set) => {
+  set(accountAtom, null);
 });
 
 export const metamaskProviderAtom = atom(async () => {

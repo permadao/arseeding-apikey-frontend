@@ -1,5 +1,9 @@
 import { useAtom } from "jotai";
-import { accountAtom, metamaskProviderAtom } from "../states";
+import {
+  accountAtom,
+  metamaskProviderAtom,
+  simulateDisconnectWalletAtom,
+} from "../states";
 import Button from "@mui/joy/Button";
 import { useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
@@ -64,6 +68,7 @@ function MenuButton({
   isLoading: boolean;
   accountText: string;
 }) {
+  const [, disconnect] = useAtom(simulateDisconnectWalletAtom);
   const { t } = useTranslation();
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
   const open = Boolean(anchorEl);
@@ -75,6 +80,7 @@ function MenuButton({
   };
   const handleDisconnect = () => {
     handleClose();
+    // disconnect();
     // reload current page to simulate disconnect.
     window.location.reload();
   };
