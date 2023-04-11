@@ -10,6 +10,7 @@ import { Button } from "@mui/joy";
 import Person3RoundedIcon from "@mui/icons-material/Person3Rounded";
 import { OrderKey } from "../types";
 import { orderBy } from "lodash";
+import PeopleAltRoundedIcon from "@mui/icons-material/PeopleAltRounded";
 
 const buttons = [
   {
@@ -31,16 +32,19 @@ const persons = [
     title: "ethever.eth",
   },
   {
-    url: "https://github.com/zyjblockchain",
+    url: "https://twitter.com/SandyA911",
     title: "Sandy",
   },
   {
-    url: undefined,
+    url: "https://twitter.com/sngzwi",
     title: "SONGZIWEI",
   },
-  { url: undefined, title: "Tina夜猫猫" },
+  { url: "https://twitter.com/NightowlTina", title: "Tina夜猫猫" },
   { url: undefined, title: "青草原" },
-  { url: undefined, title: "腾🌚" },
+  {
+    url: "https://www.xiaohongshu.com/user/profile/555615385894460eb6fd8861",
+    title: "腾🌚",
+  },
 ];
 const orderKey: OrderKey<typeof buttons> = ["title"];
 const orderPat: Array<"desc" | "asc"> = ["asc"];
@@ -81,6 +85,7 @@ export function Footer() {
       />
       <Box>{Buttons}</Box>
       <Typography
+        startDecorator={<PeopleAltRoundedIcon fontSize="lg" />}
         sx={(theme) => ({
           color: theme.palette.text.secondary,
           fontSize: theme.fontSize.sm,

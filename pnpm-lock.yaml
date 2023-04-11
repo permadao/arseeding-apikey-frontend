@@ -13,6 +13,9 @@ dependencies:
   '@metamask/detect-provider':
     specifier: ^2.0.0
     version: 2.0.0
+  '@mui/base':
+    specifier: 5.0.0-alpha.124
+    version: 5.0.0-alpha.124(@types/react@18.0.29)(react-dom@18.2.0)(react@18.2.0)
   '@mui/icons-material':
     specifier: ^5.11.11
     version: 5.11.11(@mui/material@5.11.15)(@types/react@18.0.29)(react@18.2.0)
@@ -880,6 +883,30 @@ packages:
 
   /@mui/base@5.0.0-alpha.123(@types/react@18.0.29)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-pxzcAfET3I6jvWqS4kijiLMn1OmdMw+mGmDa0SqmDZo3bXXdvLhpCCPqCkULG3UykhvFCOcU5HclOX3JCA+Zhg==}
+    engines: {node: '>=12.0.0'}
+    peerDependencies:
+      '@types/react': ^17.0.0 || ^18.0.0
+      react: ^17.0.0 || ^18.0.0
+      react-dom: ^17.0.0 || ^18.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+    dependencies:
+      '@babel/runtime': 7.21.0
+      '@emotion/is-prop-valid': 1.2.0
+      '@mui/types': 7.2.3(@types/react@18.0.29)
+      '@mui/utils': 5.11.13(react@18.2.0)
+      '@popperjs/core': 2.11.7
+      '@types/react': 18.0.29
+      clsx: 1.2.1
+      prop-types: 15.8.1
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      react-is: 18.2.0
+    dev: false
+
+  /@mui/base@5.0.0-alpha.124(@types/react@18.0.29)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-I6M+FrjRCybQCr8I8JTu6L2MkUobSQFgNIpOJyDNKL5zq/73LvZIQXvsKumAzthVGvI1PYaarM9vGDrDYbumKA==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
       '@types/react': ^17.0.0 || ^18.0.0
