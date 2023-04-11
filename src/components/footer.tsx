@@ -32,16 +32,19 @@ const persons = [
     title: "ethever.eth",
   },
   {
-    url: "https://github.com/zyjblockchain",
+    url: "https://twitter.com/SandyA911",
     title: "Sandy",
   },
   {
-    url: undefined,
+    url: "https://twitter.com/sngzwi",
     title: "SONGZIWEI",
   },
-  { url: undefined, title: "Tina夜猫猫" },
+  { url: "https://twitter.com/NightowlTina", title: "Tina夜猫猫" },
   { url: undefined, title: "青草原" },
-  { url: undefined, title: "腾🌚" },
+  {
+    url: "https://www.xiaohongshu.com/user/profile/555615385894460eb6fd8861",
+    title: "腾🌚",
+  },
 ];
 const orderKey: OrderKey<typeof buttons> = ["title"];
 const orderPat: Array<"desc" | "asc"> = ["asc"];
