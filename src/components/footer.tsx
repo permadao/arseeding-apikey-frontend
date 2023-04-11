@@ -50,10 +50,10 @@ const persons = [
 const orderKey: OrderKey<typeof buttons> = ["title"];
 const orderPat: Array<"desc" | "asc"> = ["asc"];
 const Buttons = orderBy(buttons, orderKey, orderPat).map((b) => (
-  <LinkButton key={b.url} title={b.title} url={b.url} iconPosition="end" />
+  <LinkButton key={b.title} title={b.title} url={b.url} iconPosition="end" />
 ));
 const Persons = orderBy(persons, orderKey, orderPat).map((b) => (
-  <LinkButton key={b.url} title={b.title} url={b.url} iconPosition="start" />
+  <LinkButton key={b.title} title={b.title} url={b.url} iconPosition="start" />
 ));
 
 export function Footer() {
