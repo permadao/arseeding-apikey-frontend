@@ -44,7 +44,7 @@ export async function fetchApikeyStatusFn({
   const address = queryKey[1];
   if (!address) throw new Error("address can not be null");
   const res = await fetch(
-    `https://arseed.web3infura.io/apikey_info/${address}`
+    `https://arseed.web3infra.dev/apikey_info/${address}`
   );
   const data = (await res.json()) as ApikeyStatusType;
   return data;
